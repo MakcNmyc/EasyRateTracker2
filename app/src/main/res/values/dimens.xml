@@ -1,0 +1,9 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="list_text_size">24sp</dimen>
+    <dimen name="list_error_text_size">24sp</dimen>
+    <dimen name="list_error_padding">16dp</dimen>
+
+    <dimen name="rate_details_text_size">24sp</dimen>
+
+</resources>

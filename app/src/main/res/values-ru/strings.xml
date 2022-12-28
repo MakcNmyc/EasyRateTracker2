@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Easy Rate Tracker</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="error_introductory">Ошибка: </string>
+    <string name="no_internet_error">Отсутствует соединение с интернет. Проверьте ваше подключение</string>
+
+    <string name="main_tab_headline_tracked">Отслеживаемые</string>
+    <string name="main_tab_headline_untracked">Не отслеживаемые</string>
+
+    <string name="rate_details_tracked">Отслеживаемый</string>
+    <string name="floating_add_button">Добавить</string>
+
+    <string name="added_to_tracked_notification">Добавлено в отслеживаемые</string>
+    <string name="deleted_from_tracked_notification">Удалено из отслеживаемых</string>
+    <string name="error_tracked_notification">Произошла ошибка при добавлении</string>
+
+    <string name="currency_headline">Валюта:</string>
+
+    <string name="source_header">Текущий источник:</string>
+</resources>
