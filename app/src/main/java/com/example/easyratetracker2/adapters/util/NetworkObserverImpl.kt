@@ -8,15 +8,13 @@ import androidx.lifecycle.Observer
 import com.example.easyratetracker2.R
 import com.example.easyratetracker2.adapters.util.NetworkObserver.Status
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class NetworkObserverImpl: NetworkObserver {
+class NetworkObserverImpl @Inject constructor(): NetworkObserver {
 
     @ApplicationContext
     @Inject
     lateinit var context: Context
-    override lateinit var disposables: CompositeDisposable
     val errors: MutableList<Throwable> by lazy{ArrayList()}
     override var previousStatus: Int? = null
 

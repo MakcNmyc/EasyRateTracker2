@@ -14,16 +14,16 @@ class MultilingualSup{
             maximumFractionDigits = 4
         }
 
-
         fun getPrimaryLanguage(context: Context) = context.resources.configuration.locales[0].language
 
         //easy way find all language link
-        fun <T> takeByLanguageMap(map: Map<String, T>, primaryLang: String): T {
-            return map[takeLangByLangMap(map, primaryLang)] ?: throw IndexOutOfBoundsException()
-        }
+//        fun <T> takeByLanguageMap(map: Map<String, T>, primaryLang: String): T {
+//            return map[takeLangByLangMap(map, primaryLang)] ?: throw IndexOutOfBoundsException()
+//        }
 
-        fun takeLangByLangMap(map: Map<String, *>, lang: String): String {
-            return if (map.containsKey(lang)) {
+        //easy way find all language link
+        fun takeLangByLangCollection(languages: Collection<String>, lang: String): String {
+            return if (languages.contains(lang)) {
                 lang
             } else {
                 DEFAULT_LANGUAGE

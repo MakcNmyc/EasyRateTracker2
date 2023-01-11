@@ -5,21 +5,17 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import com.example.easyratetracker2.Settings
 import com.example.easyratetracker2.adapters.StateDisplayAdapter
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.Model
 
-fun <T : ViewDataBinding> Fragment.createBinding(
+inline fun <T : ViewDataBinding> Fragment.createBinding(
     inflater: LayoutInflater,
     parent: ViewGroup?,
     inflateBinding: (LayoutInflater, ViewGroup?, Boolean) -> T
@@ -27,12 +23,12 @@ fun <T : ViewDataBinding> Fragment.createBinding(
     lifecycleOwner = this@createBinding
 }
 
-fun <T> Fragment.setUpRecyclerView(
+inline fun <T> Fragment.setUpBaseList(
     recyclerView: RecyclerView,
-    pagedListProducer: ()->LiveData<PagedList<T>>,
+    crossinline pagedListProducer: ()-> LiveData<PagedList<T>>,
     pagedAdapter: PagedListAdapter<T, RecyclerView.ViewHolder>
 ) {
-    setUpPageList(this, pagedListProducer, pagedAdapter)
+    this.setUpPagedList( pagedListProducer, pagedAdapter)
     recyclerView.apply {
         setHasFixedSize(true)
         layoutManager = LinearLayoutManager(this.context)
@@ -40,12 +36,11 @@ fun <T> Fragment.setUpRecyclerView(
     }
 }
 
-private fun <T> setUpPageList(
-    fragment: Fragment,
-    pagedListProducer: ()->LiveData<PagedList<T>>,
+inline fun <T> Fragment.setUpPagedList(
+    pagedListProducer: ()-> LiveData<PagedList<T>>,
     pagedAdapter: PagedListAdapter<T, RecyclerView.ViewHolder>
 ){
-    pagedListProducer().observe(fragment) { newPagedList -> pagedAdapter.submitList(newPagedList) }
+    pagedListProducer().observe(this) { newPagedList -> pagedAdapter.submitList(newPagedList) }
 }
 
 //fun <T> ViewModel.initPagedList(factory: DataSource.Factory<*, T>): LiveData<PagedList<T>> {
@@ -58,20 +53,20 @@ private fun <T> setUpPageList(
 //        }
 //}
 
-fun <T: Model<*>> Fragment.setUpNetworkRecyclerView(
+inline fun <T: Model<*>> Fragment.setUpNetworkList(
     recyclerView: RecyclerView,
-    pagedListProducer: ()->LiveData<PagedList<T>>,
+    crossinline pagedListProducer: () -> LiveData<PagedList<T>>,
     pagedAdapter: StateDisplayAdapter<T>,
     observer: NetworkObserver,
     swipeRefresh: SwipeRefreshLayout
 ) {
-    setUpRecyclerView(recyclerView, pagedListProducer, pagedAdapter)
+    setUpBaseList(recyclerView, pagedListProducer, pagedAdapter)
     pagedAdapter.setUpObserver(observer, this)
     swipeRefresh.setOnRefreshListener(OnRefreshListener {
         //skip widget animation
         swipeRefresh.setRefreshing(false)
         if (observer.status != NetworkObserver.Status.LOADING)
             pagedAdapter.submitList(null)
-        setUpPageList(this, pagedListProducer, pagedAdapter)
+        this.setUpPagedList(pagedListProducer, pagedAdapter)
     })
 }

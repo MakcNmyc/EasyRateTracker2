@@ -4,23 +4,28 @@ import android.content.Context
 import com.example.easyratetracker2.MultilingualSup
 import com.example.easyratetracker2.api.CbrfApi
 import com.example.easyratetracker2.data.models.external.cbrf.LatestRates
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface CbrfService {
 
-    fun getLatestCurrencyRate(): Flow<LatestRates>
+    suspend fun getLatestCurrencyRate(): LatestRates
 
-    class CbrfServiceImp @Inject constructor(context: Context): CbrfService {
+    class CbrfServiceImp @Inject constructor(@ApplicationContext context: Context) : CbrfService {
         @Inject lateinit var cbrfApi: CbrfApi
         var primaryLang: String = MultilingualSup.getPrimaryLanguage(context)
-        var latestCurrencyRateMethods: Map<String, () -> Flow<LatestRates>> = mapOf(
-            "ru" to {cbrfApi.latestCurrencyRateRU()},
-            "en" to {cbrfApi.latestCurrencyRateEn()}
-        )
+        private var supportedLanguages: List<String> = listOf(SUPPORTED_LANGUAGE_RU, SUPPORTED_LANGUAGE_EN)
 
-        override fun getLatestCurrencyRate(): Flow<LatestRates> =
-            MultilingualSup.takeByLanguageMap(latestCurrencyRateMethods, primaryLang).invoke()
+        override suspend fun getLatestCurrencyRate(): LatestRates =
+            when (MultilingualSup.takeLangByLangCollection(supportedLanguages, primaryLang)) {
+                SUPPORTED_LANGUAGE_RU -> cbrfApi.latestCurrencyRateRU()
+                else -> cbrfApi.latestCurrencyRateEn()
+            }
+    }
 
+    companion object{
+        const val SUPPORTED_LANGUAGE_RU = "ru"
+        const val SUPPORTED_LANGUAGE_EN = "en"
     }
 }

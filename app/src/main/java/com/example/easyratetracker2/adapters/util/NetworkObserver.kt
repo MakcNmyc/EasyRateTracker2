@@ -2,13 +2,8 @@ package com.example.easyratetracker2.adapters.util
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import io.reactivex.disposables.CompositeDisposable
-import java.util.function.Function
 
 interface NetworkObserver {
-    interface Factory {
-        fun create(disposables: CompositeDisposable?): NetworkObserver?
-    }
 
     object Status {
         const val INIT = 0
@@ -18,7 +13,6 @@ interface NetworkObserver {
     }
 
     val errorsDescription: String
-    val disposables: CompositeDisposable?
     var previousStatus: Int?
     var status: Int
 

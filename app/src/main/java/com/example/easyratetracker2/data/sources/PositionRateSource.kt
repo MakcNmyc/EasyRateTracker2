@@ -1,12 +1,14 @@
 package com.example.easyratetracker2.data.sources
 
+import androidx.lifecycle.ViewModel
 import androidx.paging.PositionalDataSource
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.sources.executors.PositionalSourceExecutor
 
 class PositionRateSource<T>(
     private val networkObserver: NetworkObserver,
-    val executor: PositionalSourceExecutor<T>,
+    private val vm: ViewModel,
+    private val executor: PositionalSourceExecutor<T>,
 ) : PositionalDataSource<T>() {
 
     private var dataStoreEnded = false
@@ -15,50 +17,55 @@ class PositionRateSource<T>(
         startRequest(
             params.requestedStartPosition,
             params.requestedLoadSize,
-            resultHandler { result -> callback.onResult(result, params.requestedStartPosition) },
-            )
+        ) { result -> callback.onResult(result, params.requestedStartPosition) }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
         startRequest(
             params.startPosition,
             params.loadSize,
-            resultHandler(callback::onResult)
+            callback::onResult
         )
     }
 
-    fun startRequest(startPosition: Int,
-                     requiredLoadSize: Int,
-                     resultHandler: (result: List<T>, requiredLoadSize: Int) -> Unit) {
+    private fun startRequest(startPosition: Int,
+                             requiredLoadSize: Int,
+                             resultNotify: (result: List<T>) -> Unit) {
 
         if (dataStoreEnded && startPosition != 0) {
-            pushEmptyResult(resultHandler)
+            resultHandler(requiredLoadSize, resultNotify).invoke(emptyList())
             return
         }
 
         networkObserver.status = NetworkObserver.Status.LOADING
-        executor.execute(startPosition, requiredLoadSize, resultHandler, this::onError) {
-            pushEmptyResult(resultHandler)
-        }
+        executor.execute(
+            vm,
+            startPosition,
+            requiredLoadSize,
+            resultHandler(requiredLoadSize, resultNotify),
+            this::onError)
     }
 
-    fun onError(e: Throwable) {
+    private fun onError(e: Throwable) {
         networkObserver.addError(e)
     }
 
     private inline fun resultHandler(
-        crossinline resultNotify: (result: List<T>) -> Unit
-    ): (result: List<T>, requiredLoadSize: Int) -> Unit =
-        { result: List<T>, requiredLoadSize: Int ->
-            if (result.size < requiredLoadSize || requiredLoadSize == 0)
+        requiredLoadSize: Int,
+        crossinline resultNotify: (result: List<T>) -> Unit,
+    ): (result: List<T>) -> Unit =
+        { result: List<T> ->
+            if (result.size < requiredLoadSize)
                 dataStoreEnded = true
             resultNotify(result)
             networkObserver.status = NetworkObserver.Status.READY
         }
 
 
-    private inline fun pushEmptyResult(resultHandler: (result: List<T>, requiredLoadSize: Int) -> Unit) {
-        networkObserver.status = NetworkObserver.Status.READY
-        resultHandler(emptyList(), 0)
-    }
+//    private inline fun emptyResultHandler(
+//        crossinline resultNotify: (result: List<T>) -> Unit
+//    ): () -> Unit = {
+//        networkObserver.status = NetworkObserver.Status.READY
+//        resultNotify(emptyList())
+//    }
 }

@@ -1,3 +1,3 @@
-package com.example.easyratetracker2.data.models
-
-fun {}
+//package com.example.easyratetracker2.data.models
+//
+//fun {}

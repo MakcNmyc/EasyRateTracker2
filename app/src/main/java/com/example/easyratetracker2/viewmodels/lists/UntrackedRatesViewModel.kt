@@ -1,58 +1,60 @@
 package com.example.easyratetracker2.viewmodels.lists
 
-import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.PagedList
 import com.example.easyratetracker2.adapters.util.NetworkObserver
+import com.example.easyratetracker2.data.models.UntrackedListModel
+import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
+import com.example.easyratetracker2.data.sources.executors.ServiceSourceExecutor.Companion.CBRF_SERVICE
 import com.example.easyratetracker2.data.sources.factories.UntrackedSourceFactory
-import com.example.easyratetracker2.ui.viewmodels.lists.BaseListViewModel
+import com.example.easyratetracker2.viewmodels.createPageListFromDataSourceFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.parceler.Parcels
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class UntrackedRatesViewModel<V> @Inject constructor(
-    pageListProducer: () -> LiveData<PagedList<V>>,
+class UntrackedRatesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
-) : BaseListViewModel<V>(pageListProducer) {
+) : ViewModel() {
 
     @Inject lateinit var networkObserver: NetworkObserver
     @Inject lateinit var sourceFactory: UntrackedSourceFactory
 
-    private val item: MutableLiveData<UntrackedListItem> = MutableLiveData<UntrackedListItem>()
-
+    val model: MutableLiveData<UntrackedListModel> = MutableLiveData()
     init {
-        initItem(savedStateHandle.get(ITEM_NAME))
+        viewModelScope.launch {
+//            model.postValue(savedStateHandle.get(MODEL_NAME))
+            //debug shmi
+            model.postValue(UntrackedListModel("CBRF", CBRF_SERVICE))
+        }
     }
 
-    private fun initItem(data: Parcelable?) {
-        doAsynchronously({ Parcels.unwrap(data) }, item::postValue)
+    var pageList: LiveData<PagedList<UntrackedRatesElementModel>> =
+        Transformations.switchMap(model){createPageList()}
+
+    private fun createPageList(): LiveData<PagedList<UntrackedRatesElementModel>> {
+        return createSourceFactory<UntrackedRatesElementModel>().createPageListFromDataSourceFactory()
     }
 
-    protected fun createPageList(): LiveData<PagedList<UntrackedRatesElementItem>> {
-        return createPageListFromDataSourceFactory(createAndroidSourceFactory())
-    }
-
-    fun <T> createAndroidSourceFactory(): DataSource.Factory<T, UntrackedRatesElementItem> {
-        return object : DataSource.Factory<T, UntrackedRatesElementItem>() {
-            override fun create(): DataSource<T, UntrackedRatesElementItem> {
-                return sourceFactory.create(
-                    Objects.requireNonNull<Any?>(item.getValue()).getReceivingMethod(),
-                    networkObserver
-                )
+    @Suppress("UNCHECKED_CAST")
+    fun <T> createSourceFactory(): DataSource.Factory<T, UntrackedRatesElementModel> {
+        return object : DataSource.Factory<T, UntrackedRatesElementModel>() {
+            override fun create(): DataSource<T, UntrackedRatesElementModel> {
+                return sourceFactory.create(model.value!!.receivingMethod, this@UntrackedRatesViewModel) as DataSource<T, UntrackedRatesElementModel>
             }
         }
     }
 
-    fun getItem(): LiveData<UntrackedListItem> {
-        return item
-    }
-
     companion object {
-        private const val ITEM_NAME = "untrackedListDescription"
+        private const val MODEL_NAME = "untrackedListDescription"
     }
 }
+
+

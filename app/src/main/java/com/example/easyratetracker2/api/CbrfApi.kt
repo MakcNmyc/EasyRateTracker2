@@ -1,7 +1,6 @@
 package com.example.easyratetracker2.api
 
 import com.example.easyratetracker2.data.models.external.cbrf.LatestRates
-import kotlinx.coroutines.flow.Flow
 import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
@@ -12,10 +11,10 @@ import java.util.*
 interface CbrfApi {
 
     @GET("scripts/XML_daily.asp")
-    fun latestCurrencyRateRU(): Flow<LatestRates>
+    suspend fun latestCurrencyRateRU(): LatestRates
 
     @GET("scripts/XML_daily_eng.asp")
-    fun latestCurrencyRateEn(): Flow<LatestRates>
+    suspend fun latestCurrencyRateEn(): LatestRates
 
     object Builder {
         fun build(okHttpBuilder: OkHttpClient.Builder): CbrfApi {

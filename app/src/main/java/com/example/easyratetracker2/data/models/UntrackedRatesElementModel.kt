@@ -11,8 +11,8 @@ data class UntrackedRatesElementModel(
 ) : Model<String> {
 
     constructor(v: Rate): this(
-        v.id!!,
-        v.name!!,
+        v.id,
+        v.name,
         v.getValueForUnit(),
         ServiceSourceExecutor.CBRF_SERVICE)
 }

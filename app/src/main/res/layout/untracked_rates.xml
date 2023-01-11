@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="@dimen/list_text_size"
-                android:text="@{viewModel.item.sourceName}"
+                android:text="@{viewModel.model.sourceName}"
                 tools:text="Source name" />
         </LinearLayout>
 

@@ -9,29 +9,29 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
 @Root(name = "Valute", strict = false)
-data class Rate @JvmOverloads constructor(
+data class Rate constructor(
 
     @field:Attribute(name = "ID")
-    @param:Attribute(name = "ID", required = false)
-    var id: String? = null,
+    @param:Attribute(name = "ID", required = true)
+    var id: String,
 
-    @field:Element(name = "Value", required = false)
-    @param:Element(name = "Value", required = false)
-    var value: String? = null,
+    @field:Element(name = "Value", required = true)
+    @param:Element(name = "Value", required = true)
+    var value: String,
 
-    @field:Element(name = "Name", required = false)
-    @param:Element(name = "Name", required = false)
-    var name: String? = null,
+    @field:Element(name = "Name", required = true)
+    @param:Element(name = "Name", required = true)
+    var name: String,
 
-    @field:Element(name = "Nominal", required = false)
-    @param:Element(name = "Nominal", required = false)
-    var denomination: String? = null
+    @field:Element(name = "Nominal", required = true)
+    @param:Element(name = "Nominal", required = true)
+    var denomination: String
 ){
     // external method that return rate value = value / nominal
     fun getValueForUnit(): String {
         return try {
-            (value!!.parseValue(CbrfApi.NUMBER_FORMAT_LOCALE).toFloat() /
-                    denomination!!.parseValue(CbrfApi.NUMBER_FORMAT_LOCALE).toFloat()).rateValueFormat()
+            (value.parseValue(CbrfApi.NUMBER_FORMAT_LOCALE).toFloat() /
+                    denomination.parseValue(CbrfApi.NUMBER_FORMAT_LOCALE).toFloat()).rateValueFormat()
         } catch (e: Exception) {
             Settings.DEFAULT_RATE_VALUE
         }

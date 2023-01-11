@@ -1,11 +1,14 @@
 package com.example.easyratetracker2.data.models.external.cbrf
 
 import org.simpleframework.xml.Attribute
+import org.simpleframework.xml.ElementList
+import org.simpleframework.xml.Path
 import org.simpleframework.xml.Root
 
 @Root(name = "ValCurs", strict = false)
-data class LatestRates @JvmOverloads constructor(
-    @field:Attribute(name = "Valute", required = false)
-    @param:Attribute(name = "Valute", required = false)
-    var rateList: List<Rate>? = null,
+data class LatestRates constructor(
+    @field:ElementList(name = "Valute", inline = true, required = true)
+    @param:ElementList(name = "Valute", inline = true, required = true)
+    var rateList: List<Rate>,
 )
+

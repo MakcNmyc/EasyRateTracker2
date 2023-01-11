@@ -12,20 +12,20 @@ import com.example.easyratetracker2.databinding.ListLoadElementBinding
 
 import javax.inject.Inject
 
-class StateDisplayAdapter<V : Model<*>> @Inject constructor(
+abstract class StateDisplayAdapter<V : Model<*>>(
     itemCallback: ItemCallback<V>,
-    vhProducer: (parent: ViewGroup) -> ModelViewHolder<V, *>,
     val errorProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultErrorProducer,
     val loadProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultLoadProducer
-) : ModelAdapter<V>(itemCallback, vhProducer) {
+) : ModelAdapter<V>(itemCallback) {
 
-    @Inject lateinit var observer: NetworkObserver
+    lateinit var observer: NetworkObserver
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
+            ITEM -> super.onCreateViewHolder(parent, viewType)
             ERROR -> errorProducer(parent, observer)
             LOADING -> loadProducer(parent, observer)
-            else -> super.onCreateViewHolder(parent, viewType)
+            else -> throw IndexOutOfBoundsException()
         }
     }
 

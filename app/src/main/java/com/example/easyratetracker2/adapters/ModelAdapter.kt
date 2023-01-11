@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.data.models.Model
 
-open class ModelAdapter<V : Model<*>>(
+abstract class ModelAdapter<V : Model<*>>(
     itemCallback: ItemCallback<V>,
-    val modelVHProducer: (parent: ViewGroup) -> ModelViewHolder<V, *>
 ) : PagedListAdapter<V, RecyclerView.ViewHolder>(itemCallback) {
 
+    abstract val vhProducer: (parent: ViewGroup) -> ModelViewHolder<V, *>
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return modelVHProducer(parent)
+        return vhProducer(parent)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -43,7 +44,7 @@ open class ModelAdapter<V : Model<*>>(
     open class ModelViewHolder<in V : Model<*>, T : ViewDataBinding>(
         parent: ViewGroup,
         inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T,
-        private val contentSetter: (model: V, binding: T) -> Unit
+        private inline val contentSetter: (model: V, binding: T) -> Unit
     ) : BindingViewHolder<T>(parent, inflateBinding) {
 
         fun setModel(model: V) {
@@ -52,11 +53,11 @@ open class ModelAdapter<V : Model<*>>(
         }
     }
 
-    class ModelProducerVH<in V : Model<*>, T : ViewDataBinding>(
+    class ModelProducerVH<in V : Model<*>, T : ViewDataBinding> (
         parent: ViewGroup,
         inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T,
         contentSetter: (model: V, binding: T) -> Unit,
-        private val modelProducer: (() -> V)
+        private inline val modelProducer: (() -> V)
     ) : ModelViewHolder<V, T>(parent, inflateBinding, contentSetter) {
         fun setModel() = setModel(modelProducer())
     }
