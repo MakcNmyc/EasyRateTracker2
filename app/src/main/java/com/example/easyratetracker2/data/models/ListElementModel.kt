@@ -1,6 +1,6 @@
 package com.example.easyratetracker2.data.models
 
-interface Model<T> {
+interface ListElementModel<T> {
     val id: T
     override fun equals(other: Any?): Boolean
 }

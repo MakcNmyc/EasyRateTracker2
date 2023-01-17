@@ -13,7 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.example.easyratetracker2.adapters.StateDisplayAdapter
 import com.example.easyratetracker2.adapters.util.NetworkObserver
-import com.example.easyratetracker2.data.models.Model
+import com.example.easyratetracker2.data.models.ListElementModel
 
 inline fun <T : ViewDataBinding> Fragment.createBinding(
     inflater: LayoutInflater,
@@ -53,7 +53,7 @@ inline fun <T> Fragment.setUpPagedList(
 //        }
 //}
 
-inline fun <T: Model<*>> Fragment.setUpNetworkList(
+inline fun <T: ListElementModel<*>> Fragment.setUpNetworkList(
     recyclerView: RecyclerView,
     crossinline pagedListProducer: () -> LiveData<PagedList<T>>,
     pagedAdapter: StateDisplayAdapter<T>,

@@ -37,7 +37,13 @@ class UntrackedRatesViewModel @Inject constructor(
     }
 
     var pageList: LiveData<PagedList<UntrackedRatesElementModel>> =
-        Transformations.switchMap(model){createPageList()}
+        Transformations.switchMap(model) { v ->
+            if (v != null) {
+                createPageList()
+            } else {
+                MutableLiveData()
+            }
+        }
 
     private fun createPageList(): LiveData<PagedList<UntrackedRatesElementModel>> {
         return createSourceFactory<UntrackedRatesElementModel>().createPageListFromDataSourceFactory()

@@ -1,6 +1,6 @@
 package com.example.easyratetracker2.data.models
 
-data class ListErrorModel(var description : String) : Model<Long>{
+data class ListErrorModel(var description : String) : ListElementModel<Long>{
 
     override var id: Long
         get() = ERROR_ID

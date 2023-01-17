@@ -12,10 +12,10 @@ abstract class ServiceSourceExecutor{
     @ApplicationContext
     @Inject
     lateinit var context: Context
-    private val supportedServices: MutableMap<Int, Any> = ArrayMap()
+    internal val supportedServices: MutableMap<Int, Any> = ArrayMap()
 
     @Suppress("UNCHECKED_CAST")
-    protected fun <V : Any> getService(servicesId: Int, producer: () -> V): V {
+    internal inline fun <V : Any> getService(servicesId: Int, producer: () -> V): V {
         var result = supportedServices.get(servicesId)
         if (result == null) {
             result = producer()
@@ -25,10 +25,8 @@ abstract class ServiceSourceExecutor{
         return result as V
     }
 
-    fun createCbrfService() = fromApplication(context, AppEntryPoint::class.java).createCbrfService()
-
     companion object {
-        private const val MAX_SERVICE_AMOUNT = 5
+        internal const val MAX_SERVICE_AMOUNT = 5
 
         //All supported services IDs
         const val CBRF_SERVICE = 1

@@ -8,7 +8,7 @@ data class UntrackedRatesElementModel(
     val headline: String,
     val rate: String,
     val sourceId: Int
-) : Model<String> {
+) : ListElementModel<String> {
 
     constructor(v: Rate): this(
         v.id,

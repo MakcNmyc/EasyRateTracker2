@@ -5,14 +5,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.adapters.util.NetworkObserver
+import com.example.easyratetracker2.data.models.ListElementModel
 import com.example.easyratetracker2.data.models.ListErrorModel
-import com.example.easyratetracker2.data.models.Model
 import com.example.easyratetracker2.databinding.ListErrorElementBinding
 import com.example.easyratetracker2.databinding.ListLoadElementBinding
 
-import javax.inject.Inject
-
-abstract class StateDisplayAdapter<V : Model<*>>(
+abstract class StateDisplayAdapter<V : ListElementModel<*>>(
     itemCallback: ItemCallback<V>,
     val errorProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultErrorProducer,
     val loadProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultLoadProducer

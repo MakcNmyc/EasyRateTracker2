@@ -3,6 +3,8 @@ package com.example.easyratetracker2.data.sources.executors
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
+import com.example.easyratetracker2.di.AppEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,4 +33,9 @@ class CbrfLatestCurrencyRate @Inject constructor() : PositionalSourceExecutor<Un
             }
         }
     }
+
+    private fun createCbrfService() = EntryPointAccessors.fromApplication(
+        context,
+        AppEntryPoint::class.java
+    ).createCbrfService()
 }

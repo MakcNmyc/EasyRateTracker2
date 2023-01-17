@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.util.ItemCallback
-import com.example.easyratetracker2.data.models.Model
+import com.example.easyratetracker2.data.models.ListElementModel
 
-abstract class ModelAdapter<V : Model<*>>(
+abstract class ModelAdapter<V : ListElementModel<*>>(
     itemCallback: ItemCallback<V>,
 ) : PagedListAdapter<V, RecyclerView.ViewHolder>(itemCallback) {
 
@@ -41,7 +41,7 @@ abstract class ModelAdapter<V : Model<*>>(
         ) : this(parent, inflateBinding(LayoutInflater.from(parent.context), parent, false))
     }
 
-    open class ModelViewHolder<in V : Model<*>, T : ViewDataBinding>(
+    open class ModelViewHolder<in V : ListElementModel<*>, T : ViewDataBinding>(
         parent: ViewGroup,
         inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T,
         private inline val contentSetter: (model: V, binding: T) -> Unit
@@ -53,7 +53,7 @@ abstract class ModelAdapter<V : Model<*>>(
         }
     }
 
-    class ModelProducerVH<in V : Model<*>, T : ViewDataBinding> (
+    class ModelProducerVH<in V : ListElementModel<*>, T : ViewDataBinding> (
         parent: ViewGroup,
         inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T,
         contentSetter: (model: V, binding: T) -> Unit,
