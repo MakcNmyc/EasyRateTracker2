@@ -1,6 +1,7 @@
 package com.example.easyratetracker2.di
 
 import com.example.easyratetracker2.api.services.CbrfService
+import com.example.easyratetracker2.data.repositories.SelectableSourceRepository
 import com.example.easyratetracker2.data.sources.executors.CbrfLatestCurrencyRate
 import com.example.easyratetracker2.data.sources.factories.UntrackedSourceFactory
 import dagger.Binds
@@ -15,5 +16,5 @@ interface AppEntryPoint {
     fun createCbrfLatestCurrencyRate(): CbrfLatestCurrencyRate
 //    fun createUntrackedSourceFactory(): UntrackedSourceFactory
 //    fun createUntrackedPositionSourceFactory(): UntrackedPositionSource.Factory
-//    fun createSelectableSourceRepository(): SelectableSourceRepository?
+    fun createSelectableSourceRepository(): SelectableSourceRepository
 }

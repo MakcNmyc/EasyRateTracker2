@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.example.easyratetracker2.data.models.StoredDetailsModel
 import com.example.easyratetracker2.data.store.room.TrackedRate
+import com.example.easyratetracker2.data.store.database.AppDatabase.Companion.TABLE_NAME_TRACKED_RATES
 
 @Dao
 interface TrackedRateDao : BaseDao<TrackedRate> {
@@ -15,7 +16,7 @@ interface TrackedRateDao : BaseDao<TrackedRate> {
         "SELECT id, " +
                 "id != 0 AS tracked " +
                 "FROM " +
-                "(SELECT id AS id FROM tracked_rates WHERE outerId = :outerId " +
+                "(SELECT id AS id FROM $TABLE_NAME_TRACKED_RATES WHERE outerId = :outerId " +
                 "UNION ALL " +
                 "SELECT 0 " +
                 "LIMIT 1) "

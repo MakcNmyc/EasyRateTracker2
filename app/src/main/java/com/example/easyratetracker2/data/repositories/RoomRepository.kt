@@ -4,7 +4,7 @@ import com.example.easyratetracker2.data.dao.BaseDao
 import com.example.easyratetracker2.data.repositories.utilities.StorageRequest
 import com.example.easyratetracker2.data.store.room.RoomDataObj
 
-abstract class RoomRepository<T : RoomDataObj>(var dao: BaseDao<T>) {
+abstract class RoomRepository<T : RoomDataObj>(open var dao: BaseDao<T>) {
 
     private class SavingObjects<T : RoomDataObj>(objList: List<T>) {
         val objectsForInsert: List<T> = objList.filter { v -> !v.itExistInStorage() }

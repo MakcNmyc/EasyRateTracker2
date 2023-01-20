@@ -1,6 +1,7 @@
 package com.example.easyratetracker2.di
 
 import android.content.Context
+import com.example.easyratetracker2.data.dao.SelectableSourceDao
 import com.example.easyratetracker2.data.dao.TrackedRateDao
 import com.example.easyratetracker2.data.store.database.AppDatabase
 import dagger.Module
@@ -25,8 +26,8 @@ class DatabaseModule {
         return database.trackedRateDao()
     }
 
-//    @Provides
-//    fun provideSelectableSourceDao(database: AppDatabase): SelectableSourceDao {
-//        return database.selectableSourceDao()
-//    }
+    @Provides
+    fun provideSelectableSourceDao(database: AppDatabase): SelectableSourceDao {
+        return database.selectableSourceDao()
+    }
 }

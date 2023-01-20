@@ -44,10 +44,10 @@ class ContentMainFragment: Fragment() {
         override fun createFragment(position: Int): Fragment {
 
             return when(position){
-//                TRACKED_RATE -> TrackedRates()
-//                SOURCES_NAVIGATION -> SourcesNavigation()
                 //debug shmi
-                0 -> UntrackedRates()
+                TRACKED_RATE -> UntrackedRates()
+                SOURCES_NAVIGATION -> SourcesNavigation()
+
                 else -> throw IndexOutOfBoundsException()
             }
         }
@@ -59,7 +59,7 @@ class ContentMainFragment: Fragment() {
         companion object {
             const val TRACKED_RATE = 0
             const val SOURCES_NAVIGATION = 1
-            const val ITEM_COUNT = 1
+            const val ITEM_COUNT = 2
         }
     }
 }

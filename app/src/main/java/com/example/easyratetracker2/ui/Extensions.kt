@@ -58,15 +58,17 @@ inline fun <T: ListElementModel<*>> Fragment.setUpNetworkList(
     crossinline pagedListProducer: () -> LiveData<PagedList<T>>,
     pagedAdapter: StateDisplayAdapter<T>,
     observer: NetworkObserver,
-    swipeRefresh: SwipeRefreshLayout
+    swipeRefresh: SwipeRefreshLayout,
+    crossinline pagedListRefresher: () -> Unit,
 ) {
     setUpBaseList(recyclerView, pagedListProducer, pagedAdapter)
     pagedAdapter.setUpObserver(observer, this)
-    swipeRefresh.setOnRefreshListener(OnRefreshListener {
+    swipeRefresh.setOnRefreshListener {
         //skip widget animation
-        swipeRefresh.setRefreshing(false)
+        swipeRefresh.isRefreshing = false
         if (observer.status != NetworkObserver.Status.LOADING)
             pagedAdapter.submitList(null)
+        pagedListRefresher()
         this.setUpPagedList(pagedListProducer, pagedAdapter)
-    })
+    }
 }

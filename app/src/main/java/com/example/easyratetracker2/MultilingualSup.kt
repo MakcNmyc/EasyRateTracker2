@@ -8,7 +8,9 @@ class MultilingualSup{
 
     companion object{
 
-        private const val DEFAULT_LANGUAGE = "en"
+        const val SUPPORTED_LANGUAGE_RU = "ru"
+        const val SUPPORTED_LANGUAGE_EN = "en"
+        private const val DEFAULT_LANGUAGE = SUPPORTED_LANGUAGE_EN
 
         val RATE_VALUE_INSTANCE: NumberFormat = NumberFormat.getNumberInstance().apply {
             maximumFractionDigits = 4

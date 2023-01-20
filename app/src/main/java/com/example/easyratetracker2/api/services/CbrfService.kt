@@ -2,10 +2,11 @@ package com.example.easyratetracker2.api.services
 
 import android.content.Context
 import com.example.easyratetracker2.MultilingualSup
+import com.example.easyratetracker2.MultilingualSup.Companion.SUPPORTED_LANGUAGE_EN
+import com.example.easyratetracker2.MultilingualSup.Companion.SUPPORTED_LANGUAGE_RU
 import com.example.easyratetracker2.api.CbrfApi
 import com.example.easyratetracker2.data.models.external.cbrf.LatestRates
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface CbrfService {
@@ -20,12 +21,10 @@ interface CbrfService {
         override suspend fun getLatestCurrencyRate(): LatestRates =
             when (MultilingualSup.takeLangByLangCollection(supportedLanguages, primaryLang)) {
                 SUPPORTED_LANGUAGE_RU -> cbrfApi.latestCurrencyRateRU()
-                else -> cbrfApi.latestCurrencyRateEn()
+                SUPPORTED_LANGUAGE_EN -> cbrfApi.latestCurrencyRateEn()
+                else -> throw IndexOutOfBoundsException()
             }
     }
 
-    companion object{
-        const val SUPPORTED_LANGUAGE_RU = "ru"
-        const val SUPPORTED_LANGUAGE_EN = "en"
-    }
+
 }

@@ -49,6 +49,9 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
 
     implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
@@ -70,6 +73,7 @@ dependencies {
     //Network and parse
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-simplexml:$retrofit_converter_simplexml_version"
+    implementation "com.google.code.gson:gson:$gson_version"
 
 }
 

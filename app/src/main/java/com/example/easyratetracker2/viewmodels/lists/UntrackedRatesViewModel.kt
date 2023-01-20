@@ -25,9 +25,10 @@ class UntrackedRatesViewModel @Inject constructor(
 ) : ViewModel() {
 
     @Inject lateinit var networkObserver: NetworkObserver
-    @Inject lateinit var sourceFactory: UntrackedSourceFactory
+    @Inject internal lateinit var sourceFactory: UntrackedSourceFactory
 
     val model: MutableLiveData<UntrackedListModel> = MutableLiveData()
+
     init {
         viewModelScope.launch {
 //            model.postValue(savedStateHandle.get(MODEL_NAME))
@@ -36,14 +37,22 @@ class UntrackedRatesViewModel @Inject constructor(
         }
     }
 
-    var pageList: LiveData<PagedList<UntrackedRatesElementModel>> =
-        Transformations.switchMap(model) { v ->
+    lateinit var pageList: LiveData<PagedList<UntrackedRatesElementModel>>
+
+    init {
+        initNewPageList()
+    }
+
+    fun initNewPageList(){
+        pageList = Transformations.switchMap(model) { v ->
             if (v != null) {
                 createPageList()
             } else {
                 MutableLiveData()
             }
         }
+    }
+
 
     private fun createPageList(): LiveData<PagedList<UntrackedRatesElementModel>> {
         return createSourceFactory<UntrackedRatesElementModel>().createPageListFromDataSourceFactory()
