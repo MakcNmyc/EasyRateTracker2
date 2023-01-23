@@ -37,6 +37,4 @@ class UntrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<Untra
             }
         }
     }
-
-
 }

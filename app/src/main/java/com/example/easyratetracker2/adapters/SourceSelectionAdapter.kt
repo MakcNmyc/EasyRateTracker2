@@ -5,10 +5,12 @@ import androidx.navigation.Navigation
 import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.data.models.OuterDetailsModel
 import com.example.easyratetracker2.data.models.SourceSelectionModel
+import com.example.easyratetracker2.data.models.UntrackedListModel
 import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.databinding.SourceSelectionElementBinding
 import com.example.easyratetracker2.databinding.UntrackedRatesElementBinding
 import com.example.easyratetracker2.ui.ContentMainFragmentDirections
+import com.example.easyratetracker2.ui.lists.SourceSelectionListDirections
 import javax.inject.Inject
 
 class SourceSelectionAdapter @Inject constructor(itemCallback: ItemCallback<SourceSelectionModel>) :
@@ -19,6 +21,15 @@ class SourceSelectionAdapter @Inject constructor(itemCallback: ItemCallback<Sour
             ModelViewHolder(
                 parent,
                 SourceSelectionElementBinding::inflate
-            ) { model, binding -> binding.model = model }
+            ) { model, binding ->
+                binding.model = model
+                binding.root.setOnClickListener { view ->
+                    Navigation.findNavController(view).navigate(
+                        SourceSelectionListDirections.actionSourceSelectionListToUntrackedRatesList(
+                            UntrackedListModel(model)
+                        )
+                    )
+                }
+            }
         }
 }

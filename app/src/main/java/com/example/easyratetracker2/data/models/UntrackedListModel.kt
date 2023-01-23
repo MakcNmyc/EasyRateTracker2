@@ -9,6 +9,8 @@ data class UntrackedListModel(
     var receivingMethod: Int
 ) : Parcelable {
 
+    constructor(source: SourceSelectionModel): this(source.name, source.receivingMethod)
+
 //    constructor()
 //
 //    companion object {
