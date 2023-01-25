@@ -16,4 +16,11 @@ data class OuterDetailsModel(
         el.rate,
         el.sourceId
     )
+
+    constructor(el: TrackedRatesElementModel) : this(
+        el.id,
+        el.headline,
+        el.rate,
+        el.sourceId
+    )
 }

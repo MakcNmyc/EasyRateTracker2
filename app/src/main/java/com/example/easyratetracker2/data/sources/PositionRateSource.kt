@@ -1,13 +1,13 @@
 package com.example.easyratetracker2.data.sources
 
-import androidx.lifecycle.ViewModel
 import androidx.paging.PositionalDataSource
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.sources.executors.PositionalSourceExecutor
+import kotlinx.coroutines.CoroutineScope
 
 class PositionRateSource<T>(
     private val networkObserver: NetworkObserver,
-    private val vm: ViewModel,
+    private val scope: CoroutineScope,
     private val executor: PositionalSourceExecutor<T>,
 ) : PositionalDataSource<T>() {
 
@@ -39,7 +39,7 @@ class PositionRateSource<T>(
 
         networkObserver.status = NetworkObserver.Status.LOADING
         executor.execute(
-            vm,
+            scope,
             startPosition,
             requiredLoadSize,
             resultHandler(requiredLoadSize, resultNotify),
@@ -57,8 +57,8 @@ class PositionRateSource<T>(
         { result: List<T> ->
             if (result.size < requiredLoadSize)
                 dataStoreEnded = true
-            resultNotify(result)
             networkObserver.status = NetworkObserver.Status.READY
+            resultNotify(result)
         }
 
 

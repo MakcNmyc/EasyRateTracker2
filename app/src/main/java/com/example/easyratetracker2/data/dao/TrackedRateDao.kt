@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.easyratetracker2.data.models.StoredDetailsModel
+import com.example.easyratetracker2.data.models.TrackedIdModel
 import com.example.easyratetracker2.data.store.room.TrackedRate
 import com.example.easyratetracker2.data.store.database.AppDatabase.Companion.TABLE_NAME_TRACKED_RATES
 
 @Dao
 interface TrackedRateDao : BaseDao<TrackedRate> {
-//    @Query("SELECT id, outerId, sourceId FROM tracked_rates LIMIT :limit OFFSET :offset")
-//    fun getTrackedRatesForList(limit: Int, offset: Int): List<TrackedIdItem>
+
+    @Query("SELECT id, outerId, sourceId FROM $TABLE_NAME_TRACKED_RATES LIMIT :limit OFFSET :offset")
+    fun getTrackedRatesForList(limit: Int, offset: Int): List<TrackedIdModel>
 
     @Query(
         "SELECT id, " +

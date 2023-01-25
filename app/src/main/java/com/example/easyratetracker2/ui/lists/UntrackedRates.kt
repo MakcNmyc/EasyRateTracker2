@@ -30,22 +30,17 @@ class UntrackedRates : Fragment() {
 
         setUpNetworkList(
             binding.untrackedRatesList,
-            { viewModel.pageList },
+            { viewModel.pagedList },
             adapter,
             viewModel.networkObserver,
             binding.swipeRefresh,
-            {viewModel.initNewPageList()}
+            {viewModel.refreshPagedList()}
         )
 
         adapter.navController = MainActivity.getNavController(this)
 
         binding.viewModel = viewModel
 
-//        binding.sourceDescription.setOnClickListener { v ->
-//            findNavController(v).navigate(ContentMainFragmentDirections.actionContentMainToRateDetails(
-//                OuterDetailsModel()
-//            ))
-//        }
         return binding.root
     }
 }

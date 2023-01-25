@@ -7,6 +7,7 @@ import com.example.easyratetracker2.data.repositories.TrackedRateRepository
 import com.example.easyratetracker2.data.repositories.utilities.StorageRequest
 import com.example.easyratetracker2.data.store.room.TrackedRate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,8 +31,8 @@ class RateDetailsViewModel @Inject constructor(savedStateHandle: SavedStateHandl
 
     fun addToTracked(onDone: (StorageRequest<TrackedRate>) -> Unit) {
         val outer = outerDetails.value
-        if (outer != null && storedDetails.value?.tracked == true){
-            viewModelScope.launch {
+        if (outer != null && storedDetails.value?.tracked == false){
+            viewModelScope.launch(Dispatchers.IO) {
                 StorageRequest(listOf(TrackedRate(outer.outerId, outer.sourceId)))
                     .also {
                         repository.saveToDb(it)
@@ -44,10 +45,10 @@ class RateDetailsViewModel @Inject constructor(savedStateHandle: SavedStateHandl
     fun deleteFromTracked(onDone: (StorageRequest<TrackedRate>) -> Unit) {
         val stored = storedDetails.value
         if (stored != null)
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 StorageRequest(listOf(TrackedRate(id = stored.id)))
                     .also {
-                        repository.saveToDb(it)
+                        repository.deleteFromDb(it)
                         onDone(it)
                     }
             }

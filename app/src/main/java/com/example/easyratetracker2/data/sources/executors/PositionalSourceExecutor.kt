@@ -1,11 +1,11 @@
 package com.example.easyratetracker2.data.sources.executors
 
-import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
 
 abstract class PositionalSourceExecutor<T>: ServiceSourceExecutor(){
 
     abstract fun execute(
-        vm: ViewModel,
+        scope: CoroutineScope,
         startPosition: Int,
         loadSize: Int,
         resultHandler: (result: List<T>) -> Unit,

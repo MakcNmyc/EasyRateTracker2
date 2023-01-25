@@ -18,6 +18,8 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
 
     lateinit var observer: NetworkObserver
 
+    var hasDecorationItem = true
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             ITEM -> super.onCreateViewHolder(parent, viewType)
@@ -54,7 +56,8 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
     }
 
     private fun adapterStatusNotify(newStatus: Int, previousStatus: Int) {
-        val hasDecorationItems = hasDecorationItems()
+        hasDecorationItem = hasDecorationItems(newStatus)
+        val hasDecorationItems = hasDecorationItem
         val hadDecorationItems = hasDecorationItems(previousStatus)
         val itemCount: Int = itemCount
         if (hadDecorationItems != hasDecorationItems) {

@@ -31,20 +31,14 @@ class UntrackedRatesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-//            model.postValue(savedStateHandle.get(MODEL_NAME))
-            //debug shmi
-            model.postValue(UntrackedListModel("CBRF", CBRF_SERVICE))
+            model.postValue(savedStateHandle.get(MODEL_NAME))
         }
     }
 
-    lateinit var pageList: LiveData<PagedList<UntrackedRatesElementModel>>
+    var pagedList = createNewPagedList()
 
-    init {
-        initNewPageList()
-    }
-
-    fun initNewPageList(){
-        pageList = Transformations.switchMap(model) { v ->
+    private fun createNewPagedList(): LiveData<PagedList<UntrackedRatesElementModel>>{
+        return Transformations.switchMap(model) { v ->
             if (v != null) {
                 createPageList()
             } else {
@@ -53,16 +47,18 @@ class UntrackedRatesViewModel @Inject constructor(
         }
     }
 
-
-    private fun createPageList(): LiveData<PagedList<UntrackedRatesElementModel>> {
-        return createSourceFactory<UntrackedRatesElementModel>().createPageListFromDataSourceFactory()
+    fun refreshPagedList(){
+        pagedList = createNewPagedList()
     }
 
+    private fun createPageList(): LiveData<PagedList<UntrackedRatesElementModel>> =
+        createSourceFactory().createPageListFromDataSourceFactory()
+
     @Suppress("UNCHECKED_CAST")
-    fun <T> createSourceFactory(): DataSource.Factory<T, UntrackedRatesElementModel> {
-        return object : DataSource.Factory<T, UntrackedRatesElementModel>() {
-            override fun create(): DataSource<T, UntrackedRatesElementModel> {
-                return sourceFactory.create(model.value!!.receivingMethod, this@UntrackedRatesViewModel) as DataSource<T, UntrackedRatesElementModel>
+    private fun createSourceFactory(): DataSource.Factory<Any, UntrackedRatesElementModel> {
+        return object : DataSource.Factory<Any, UntrackedRatesElementModel>() {
+            override fun create(): DataSource<Any, UntrackedRatesElementModel> {
+                return sourceFactory.create(model.value!!.receivingMethod, this@UntrackedRatesViewModel) as DataSource<Any, UntrackedRatesElementModel>
             }
         }
     }

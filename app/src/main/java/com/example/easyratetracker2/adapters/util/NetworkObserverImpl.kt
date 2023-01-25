@@ -15,7 +15,7 @@ class NetworkObserverImpl @Inject constructor(): NetworkObserver {
     @ApplicationContext
     @Inject
     lateinit var context: Context
-    val errors: MutableList<Throwable> by lazy{ArrayList()}
+    private val errors: MutableList<Throwable> by lazy{ArrayList()}
     override var previousStatus: Int? = null
 
     private var _status: MutableLiveData<Int> = MutableLiveData(Status.INIT)

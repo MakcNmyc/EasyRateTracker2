@@ -1,24 +1,24 @@
 package com.example.easyratetracker2.data.sources.executors
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.di.AppEntryPoint
 import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CbrfLatestCurrencyRate @Inject constructor() : PositionalSourceExecutor<UntrackedRatesElementModel>() {
+class CbrfLatestUntrackedElement @Inject constructor() : PositionalSourceExecutor<UntrackedRatesElementModel>() {
 
     override fun execute(
-        vm: ViewModel,
+        scope: CoroutineScope,
         startPosition: Int,
         loadSize: Int,
         resultHandler: (result: List<UntrackedRatesElementModel>) -> Unit,
         errorHandler: (e: Throwable) -> Unit
     ) {
-        vm.viewModelScope.launch {
+        scope.launch (Dispatchers.IO){
             try {
                 resultHandler(
                     getService(CBRF_SERVICE, ::createCbrfService).getLatestCurrencyRate()

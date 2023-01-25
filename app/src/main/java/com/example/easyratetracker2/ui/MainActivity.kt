@@ -20,11 +20,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        // if result null fragment do not support NavController from main activity
+        // if result null - fragment do not support NavController from main activity
         fun getNavController(fragment: Fragment): NavController? {
-            val v = fragment.requireActivity()
-                .findViewById<View>(R.id.content_main_navigation_container)
-            return v?.let { findNavController(it) }
+            return fragment.requireActivity()
+                .findViewById<View>(R.id.content_main_navigation_container)?.let { findNavController(it) }
         }
     }
 }

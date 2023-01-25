@@ -4,19 +4,20 @@ import androidx.lifecycle.LiveData
 import com.example.easyratetracker2.api.services.CbrfService
 import com.example.easyratetracker2.data.dao.TrackedRateDao
 import com.example.easyratetracker2.data.models.StoredDetailsModel
+import com.example.easyratetracker2.data.models.TrackedIdModel
 import com.example.easyratetracker2.data.store.room.TrackedRate
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TrackedRateRepository @Inject constructor(var trackedDao: TrackedRateDao, var service: CbrfService) :
+class TrackedRateRepository @Inject constructor(var trackedDao: TrackedRateDao) :
     RoomRepository<TrackedRate>(trackedDao) {
 
     fun getTrackedDetailsModel(id: String): LiveData<StoredDetailsModel> {
         return trackedDao.getTrackedDetailsItem(id)
     }
 
-//    fun getTrackedIds(startPosition: Int, loadSize: Int): List<TrackedIdItem> {
-//        return trackedDao.getTrackedRatesForList(loadSize, startPosition)
-//    }
+    fun getTrackedIds(startPosition: Int, loadSize: Int): List<TrackedIdModel> {
+        return trackedDao.getTrackedRatesForList(loadSize, startPosition)
+    }
 }
