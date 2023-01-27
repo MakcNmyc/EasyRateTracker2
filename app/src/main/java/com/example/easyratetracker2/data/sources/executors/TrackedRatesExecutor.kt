@@ -13,6 +13,7 @@ class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<Trac
 
     @Inject lateinit var repository: TrackedRateRepository
 
+    @FlowPreview
     override fun execute(
         scope: CoroutineScope,
         startPosition: Int,
@@ -30,10 +31,10 @@ class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<Trac
 
             try {
                 ids.groupBy { it.sourceId }
-                    .map { async { getDataFromService(it.key, it.value) } }
-                    .awaitAll()
+                    .map { getDataFromService(it.key, it.value) }
                     .asFlow()
                     .flatMapMerge { it }
+                    .flowOn(Dispatchers.Default)
                     .toList()
                     .let { result ->  resultHandler(result)}
             } catch (e: Throwable) {
