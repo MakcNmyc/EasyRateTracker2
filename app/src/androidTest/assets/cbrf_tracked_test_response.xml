@@ -1,0 +1,9 @@
+<ValCurs Date="22.10.2022" name="Foreign Currency Market">
+    <Valute ID="9999">
+        <NumCode>9999</NumCode>
+        <CharCode>TST</CharCode>
+        <Nominal>1</Nominal>
+        <Name>Test valute name</Name>
+        <Value>100,00</Value>
+    </Valute>
+</ValCurs>

@@ -24,6 +24,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Rule
@@ -44,56 +45,23 @@ import javax.inject.Inject
 @HiltAndroidTest
 class TrackedRateTest {
 
-    init {
-        val a = 0
-    }
-
-//    @get:Rule(order = 0)
-//    val testCoroutineRule = TestCoroutineRule()
-
-
     @get:Rule(order = 0)
     val mockitoRule = MockitoJUnit.rule()
-
-    init {
-        val a = 0
-    }
 
     @get:Rule(order = 1)
     val hiltRule = HiltAndroidRule(this)
 
-    init {
-        val a = 0
-    }
-
     @get:Rule(order = 2)
     val hiltInjectRule: HiltInjectRule = HiltInjectRule(hiltRule)
-
-    init {
-        val a = 0
-    }
 
     @get:Rule(order = 3)
     val beforeActivityCreatedRule: BeforeActivityCreatedRule =
         BeforeActivityCreatedRule (this::beforeActivityCreated)
 
-    init {
-        val a = 0
-    }
-
     @get:Rule(order = 4)
     val activityRule: ActivityScenarioRule<TestHiltActivity> = ActivityScenarioRule(
         TestHiltActivity::class.java
     )
-
-    init {
-        val a = 0
-    }
-
-//   private val scenarioManager = ScenarioManager(activityRule.scenario)
-    init {
-        val a = 0
-    }
 
     @get:Rule(order = 5)
     val hiltFragmentRule: HiltFragmentRule = HiltFragmentRule(
@@ -104,26 +72,13 @@ class TrackedRateTest {
     @get:Rule(order = 6)
     val scenarioManagerRule = ScenarioManagerRule(activityRule)
 
-    init {
-        val a = 0
-    }
-
     @get:Rule(order = 7)
     val dataBindingIdlingRule: DataBindingIdlingRule = DataBindingIdlingRule(CoroutineScope(Dispatchers.Default), scenarioManagerRule.scenarioManager)
-
-    init {
-        val a = 0
-    }
-
 
     @get:Rule(order = 8)
     val networkObserverIdlingRule: NetworkObserverIdlingRule =
         NetworkObserverIdlingRule(CoroutineScope(Dispatchers.Default), scenarioManagerRule.scenarioManager)
         { activity -> getNetworkObserver(hiltFragmentRule, activity) }
-
-    init {
-        val a = 0
-    }
 
     @Inject lateinit var mockWebServer: MockWebServer
     @BindValue
@@ -133,23 +88,16 @@ class TrackedRateTest {
     @get:Rule(order = 9)
     val mockWebServerRule: MockWebServerRule = MockWebServerRule { mockWebServer }
 
-    init {
-        val a = 0
-    }
-
     @get:Rule(order = 10)
     val recyclerViewIdlingRule: LoadElementInAdapterIdlingRule =
         LoadElementInAdapterIdlingRule(CoroutineScope(Dispatchers.Default), scenarioManagerRule.scenarioManager)
         { activity -> getLoadElement(hiltFragmentRule, activity) }
 
-    init {
-        val a = 0
-    }
 
 //    @InjectMocks
 //    lateinit var trackedDao: TrackedRateDao
 
-    fun beforeActivityCreated() {
+    private fun beforeActivityCreated() {
 
         MockitoAnnotations.initMocks(this);
 
@@ -180,28 +128,11 @@ class TrackedRateTest {
 
     @Test
     @Throws(IOException::class, InterruptedException::class)
-    fun tracked_element_cbrf_test() {
+    fun trackedElementCbrfTest(): Unit = runBlocking {
         Espresso.onView(withId(R.id.tracked_rates_list))
             .check(ViewAssertions.matches(atPosition(0, ViewMatchers.withText(RESPONSE_HEADLINE))))
     }
 
-    private fun getNetworkObserver(
-        hiltFragmentRule: HiltFragmentRule,
-        activity: TestHiltActivity
-    ): NetworkObserver =
-        hiltFragmentRule.findFirstFragment(activity).let { tr ->
-            (tr as TrackedRates).viewModel.networkObserver
-        }
-
-    private fun getLoadElement(
-        hiltFragmentRule: HiltFragmentRule,
-        activity: TestHiltActivity
-    ): LoadElementObserver =
-        hiltFragmentRule.findFirstFragment(activity).let { tr ->
-            (tr as TrackedRates).adapter.let { adapter ->
-                (adapter as TrackedRatesTestAdapter).obs
-            }
-        }
 
     companion object {
         const val CbrfTrackedResponseFilename = "cbrf_tracked_test_response.xml"
@@ -223,5 +154,18 @@ class TrackedRateTest {
                 Log.e(TAG, "IOException in getCbrfTrackedResponse()")
                 throw UncheckedIOException(e)
             }
+
+        fun getNetworkObserver(
+            hiltFragmentRule: HiltFragmentRule,
+            activity: TestHiltActivity
+        ): NetworkObserver =
+            (hiltFragmentRule.findFirstFragment(activity) as TrackedRates).viewModel.networkObserver
+
+        fun getLoadElement(
+            hiltFragmentRule: HiltFragmentRule,
+            activity: TestHiltActivity
+        ): LoadElementObserver =
+            ((hiltFragmentRule.findFirstFragment(activity) as TrackedRates).adapter as TrackedRatesTestAdapter).obs
+
     }
 }

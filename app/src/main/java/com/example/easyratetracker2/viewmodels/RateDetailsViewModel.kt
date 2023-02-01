@@ -20,7 +20,7 @@ class RateDetailsViewModel @Inject constructor(savedStateHandle: SavedStateHandl
     val outerDetails: MutableLiveData<OuterDetailsModel> = MutableLiveData()
     init {
         viewModelScope.launch {
-            outerDetails.postValue(savedStateHandle.get(ITEM_NAME))
+            outerDetails.postValue(savedStateHandle[ITEM_NAME])
         }
     }
 

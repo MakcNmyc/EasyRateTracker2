@@ -31,7 +31,7 @@ class UntrackedRatesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            model.postValue(savedStateHandle.get(MODEL_NAME))
+            model.postValue(savedStateHandle[MODEL_NAME])
         }
     }
 
@@ -64,7 +64,7 @@ class UntrackedRatesViewModel @Inject constructor(
     }
 
     companion object {
-        private const val MODEL_NAME = "untrackedListDescription"
+        const val MODEL_NAME = "untrackedListDescription"
     }
 }
 
