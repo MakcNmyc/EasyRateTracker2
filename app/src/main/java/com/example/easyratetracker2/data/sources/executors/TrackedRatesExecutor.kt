@@ -13,7 +13,7 @@ class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<Trac
 
     @Inject lateinit var repository: TrackedRateRepository
 
-    @FlowPreview
+//    @FlowPreview
     override fun execute(
         scope: CoroutineScope,
         startPosition: Int,
