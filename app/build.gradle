@@ -85,9 +85,8 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$test_runner_version"
     debugImplementation "androidx.fragment:fragment-testing:$fragment_testing_version"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinx_coroutines_version"
-//    testImplementation 'org.hamcrest:hamcrest:2.2'
     androidTestImplementation "org.mockito:mockito-core:$mockito_core_version"
-    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:4.1.0"
+    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$mockwebserver_version"
     androidTestImplementation "org.mockito:mockito-android:$mockito_core_version"
 }

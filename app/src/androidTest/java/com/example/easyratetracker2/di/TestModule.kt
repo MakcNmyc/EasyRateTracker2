@@ -8,7 +8,6 @@ import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.adapters.util.NetworkObserverImpl
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -16,10 +15,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class TestModule {
-
-//    @Singleton
-//    @Binds
-//    abstract fun createTrackedRatesViewModel(vm: TrackedRatesViewModelTest): TrackedRatesViewModel
 
     @Singleton
     @Binds
@@ -30,6 +25,5 @@ abstract class TestModule {
 
     @Binds
     abstract fun createUntrackedRatesAdapter(adapter: UntrackedRatesTestAdapter): UntrackedRatesAdapter
-
 
 }

@@ -41,6 +41,7 @@ buildscript {
         mockwebserver_version = "3.14.9"
         fragment_testing_version = "1.5.4"
         kotlinx_coroutines_version = "1.6.4"
+        mockito_kotlin_version = "4.1.0"
     }
 
     dependencies {

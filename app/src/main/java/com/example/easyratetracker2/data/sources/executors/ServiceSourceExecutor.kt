@@ -2,8 +2,6 @@ package com.example.easyratetracker2.data.sources.executors
 
 import android.content.Context
 import androidx.collection.ArrayMap
-import com.example.easyratetracker2.di.AppEntryPoint
-import dagger.hilt.android.EntryPointAccessors.fromApplication
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -16,7 +14,7 @@ abstract class ServiceSourceExecutor{
 
     @Suppress("UNCHECKED_CAST")
     internal inline fun <V : Any> getService(servicesId: Int, producer: () -> V): V {
-        var result = supportedServices.get(servicesId)
+        var result = supportedServices[servicesId]
         if (result == null) {
             result = producer()
             if (supportedServices.size >= MAX_SERVICE_AMOUNT) supportedServices.clear()

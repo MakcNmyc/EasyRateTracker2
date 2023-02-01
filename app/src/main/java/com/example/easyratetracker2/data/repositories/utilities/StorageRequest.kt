@@ -4,7 +4,7 @@ import com.example.easyratetracker2.data.store.Storable
 
 class StorageRequest<T: Storable> (var objects: List<T>) {
 
-    val errorsCodes: MutableList<Int> by lazy{ArrayList()}
+    private val errorsCodes: MutableList<Int> by lazy{ArrayList()}
     var isDeny = false
 
     fun addError(e: Int) {
@@ -13,7 +13,7 @@ class StorageRequest<T: Storable> (var objects: List<T>) {
     }
 
     companion object{
-        val INSERT_ERROR: Int = 0
-        val UPDATE_ERROR: Int = 1
+        const val INSERT_ERROR: Int = 0
+        const val UPDATE_ERROR: Int = 1
     }
 }

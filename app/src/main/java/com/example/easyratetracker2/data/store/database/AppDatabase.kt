@@ -19,7 +19,7 @@ abstract class AppDatabase : RoomDatabase() {
         const val TABLE_NAME_TRACKED_RATES = "tracked_rates"
         const val TABLE_NAME_SELECTABLE_SOURCES = "selectable_sources"
 
-        const val DATABASE_NAME = "database"
+        private const val DATABASE_NAME = "database"
 
         @Volatile private var instance: AppDatabase? = null
 

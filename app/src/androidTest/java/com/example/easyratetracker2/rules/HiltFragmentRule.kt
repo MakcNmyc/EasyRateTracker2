@@ -2,7 +2,6 @@ package com.example.easyratetracker2.rules
 
 import android.R
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.test.core.app.ActivityScenario
 import com.example.easyratetracker2.ui.TestHiltActivity
@@ -49,7 +48,6 @@ class HiltFragmentRule(
     }
 
     fun findFirstFragment(activity: TestHiltActivity): Fragment {
-        Log.e("debugShmi", "HiltFragmentRule findFirstFragment")
         return findFragment(activity, firstFragmentTag!!)!!
     }
 
@@ -58,7 +56,6 @@ class HiltFragmentRule(
         return object : Statement() {
             @Throws(Throwable::class)
             override fun evaluate() {
-                Log.e("debugShmi", "HiltFragmentRule firstFragmentTag init")
                 firstFragmentTag = addFragment(firstFragment, firstFragmentArgs)
                 base.evaluate()
             }

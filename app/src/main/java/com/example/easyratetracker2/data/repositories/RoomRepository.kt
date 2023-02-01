@@ -56,7 +56,9 @@ abstract class RoomRepository<T : RoomDataObj>(open var dao: BaseDao<T>) {
     companion object {
 
         const val DEFAULT_ID: Long = 0
+
         const val STRING_STUB: String = ""
+        const val INT_STUB: Int = -1
 
         fun itNewObjId(id: Long?): Boolean {
             return id == null || id == DEFAULT_ID

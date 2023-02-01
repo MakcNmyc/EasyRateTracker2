@@ -60,12 +60,4 @@ class PositionRateSource<T>(
             networkObserver.status = NetworkObserver.Status.READY
             resultNotify(result)
         }
-
-
-//    private inline fun emptyResultHandler(
-//        crossinline resultNotify: (result: List<T>) -> Unit
-//    ): () -> Unit = {
-//        networkObserver.status = NetworkObserver.Status.READY
-//        resultNotify(emptyList())
-//    }
 }

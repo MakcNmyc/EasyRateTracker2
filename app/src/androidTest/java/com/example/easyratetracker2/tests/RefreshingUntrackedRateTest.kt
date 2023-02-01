@@ -24,6 +24,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoRule
 import java.util.*
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -37,7 +38,7 @@ class RefreshingUntrackedRateTest {
     lateinit var pageListAfter: LiveData<PagedList<UntrackedRatesElementModel>>
 
     @get:Rule(order = 0)
-    val mockitoRule = MockitoJUnit.rule()
+    val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
     @get:Rule(order = 1)
     val hiltRule = HiltAndroidRule(this)
@@ -132,6 +133,6 @@ class RefreshingUntrackedRateTest {
         activity: TestHiltActivity
     ): LoadElementObserver =
         (((hiltFragmentRule.findFirstFragment(activity) as UntrackedRates).adapter)
-                as UntrackedRatesTestAdapter).getObs()
+                as UntrackedRatesTestAdapter).obs
 
 }

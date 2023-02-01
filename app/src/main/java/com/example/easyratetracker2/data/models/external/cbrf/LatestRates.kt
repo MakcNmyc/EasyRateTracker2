@@ -1,8 +1,6 @@
 package com.example.easyratetracker2.data.models.external.cbrf
 
-import org.simpleframework.xml.Attribute
 import org.simpleframework.xml.ElementList
-import org.simpleframework.xml.Path
 import org.simpleframework.xml.Root
 
 @Root(name = "ValCurs", strict = false)

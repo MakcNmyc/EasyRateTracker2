@@ -16,7 +16,7 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
     val loadProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultLoadProducer
 ) : ModelAdapter<V>(itemCallback) {
 
-    lateinit var observer: NetworkObserver
+    private lateinit var observer: NetworkObserver
 
     var hasDecorationItem = true
 

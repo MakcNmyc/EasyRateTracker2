@@ -27,6 +27,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoRule
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -36,7 +37,7 @@ class RefreshingTrackedRateTest {
     @Inject lateinit var repository: TrackedRateRepository
 
     @get:Rule(order = 0)
-    val mockitoRule = MockitoJUnit.rule()
+    val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
     @get:Rule(order = 1)
     val hiltRule = HiltAndroidRule(this)

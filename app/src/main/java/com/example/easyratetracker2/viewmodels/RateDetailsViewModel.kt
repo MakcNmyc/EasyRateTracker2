@@ -44,7 +44,8 @@ class RateDetailsViewModel @Inject constructor(savedStateHandle: SavedStateHandl
 
     fun deleteFromTracked(onDone: (StorageRequest<TrackedRate>) -> Unit) {
         val stored = storedDetails.value
-        if (stored != null)
+        val outer = outerDetails.value
+        if (stored != null && outer != null)
             viewModelScope.launch(Dispatchers.IO) {
                 StorageRequest(listOf(TrackedRate(id = stored.id)))
                     .also {

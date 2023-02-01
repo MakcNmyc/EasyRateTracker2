@@ -31,7 +31,7 @@ open class UntrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<
         val navControllerLocal = navController
 
         navControllerLocal?.let {
-            binding.root.setOnClickListener { v ->
+            binding.root.setOnClickListener {
                 navControllerLocal.navigate(
                     ContentMainFragmentDirections.actionContentMainToRateDetails(
                         OuterDetailsModel(model)))

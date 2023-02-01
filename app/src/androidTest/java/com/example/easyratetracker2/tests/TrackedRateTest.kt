@@ -16,7 +16,6 @@ import com.example.easyratetracker2.data.models.TrackedIdModel
 import com.example.easyratetracker2.data.repositories.TrackedRateRepository
 import com.example.easyratetracker2.data.sources.executors.ServiceSourceExecutor
 import com.example.easyratetracker2.rules.*
-import com.example.easyratetracker2.tests.util.ScenarioManager
 import com.example.easyratetracker2.ui.TestHiltActivity
 import com.example.easyratetracker2.ui.lists.TrackedRates
 import dagger.hilt.android.testing.BindValue
@@ -29,16 +28,16 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.*
 import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito.doReturn
+import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnit
+import org.mockito.junit.MockitoRule
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.io.UncheckedIOException
 import java.nio.charset.StandardCharsets
-import java.util.*
 import java.util.stream.Collectors
 import javax.inject.Inject
 
@@ -46,7 +45,7 @@ import javax.inject.Inject
 class TrackedRateTest {
 
     @get:Rule(order = 0)
-    val mockitoRule = MockitoJUnit.rule()
+    val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
     @get:Rule(order = 1)
     val hiltRule = HiltAndroidRule(this)
@@ -94,26 +93,14 @@ class TrackedRateTest {
         { activity -> getLoadElement(hiltFragmentRule, activity) }
 
 
-//    @InjectMocks
-//    lateinit var trackedDao: TrackedRateDao
-
     private fun beforeActivityCreated() {
 
-        MockitoAnnotations.initMocks(this);
 
         val testDbItem = TrackedIdModel(
             TEST_ITEM_ID,
             ServiceSourceExecutor.CBRF_SERVICE,
             TEST_ITEM_OUTER_ID
         )
-
-        var trackedRateRepository2 = Mockito.mock(TrackedRateRepository::class.java)
-
-//        doAnswer { listOf(testDbItem) }.`when`(trackedRateRepository).getTrackedIds(anyInt(), anyInt())
-//        doReturn{ listOf(testDbItem) }.`when`(
-//            trackedRateRepository.
-//            getTrackedIds(anyInt(), anyInt())
-//        )
 
         Mockito
             .`when`(

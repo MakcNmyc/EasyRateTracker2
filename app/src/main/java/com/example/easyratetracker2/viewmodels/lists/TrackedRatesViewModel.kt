@@ -13,7 +13,6 @@ import com.example.easyratetracker2.data.sources.executors.TrackedRatesExecutor
 import com.example.easyratetracker2.data.store.database.AppDatabase
 import com.example.easyratetracker2.viewmodels.createPageListFromDataSourceFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel

@@ -3,13 +3,9 @@ package com.example.easyratetracker2.adapters
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.example.easyratetracker2.adapters.util.ItemCallback
-import com.example.easyratetracker2.data.models.OuterDetailsModel
 import com.example.easyratetracker2.data.models.SourceSelectionModel
 import com.example.easyratetracker2.data.models.UntrackedListModel
-import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.databinding.SourceSelectionElementBinding
-import com.example.easyratetracker2.databinding.UntrackedRatesElementBinding
-import com.example.easyratetracker2.ui.ContentMainFragmentDirections
 import com.example.easyratetracker2.ui.lists.SourceSelectionListDirections
 import javax.inject.Inject
 

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagedList
 import com.example.easyratetracker2.data.models.SourceSelectionModel
-import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.data.repositories.SelectableSourceRepository
 import com.example.easyratetracker2.viewmodels.createPageListFromDataSourceFactory
 import dagger.hilt.android.lifecycle.HiltViewModel

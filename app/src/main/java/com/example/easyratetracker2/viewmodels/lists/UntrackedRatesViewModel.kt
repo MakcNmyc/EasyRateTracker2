@@ -1,17 +1,11 @@
 package com.example.easyratetracker2.viewmodels.lists
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.DataSource
 import androidx.paging.PagedList
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.UntrackedListModel
 import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
-import com.example.easyratetracker2.data.sources.executors.ServiceSourceExecutor.Companion.CBRF_SERVICE
 import com.example.easyratetracker2.data.sources.factories.UntrackedSourceFactory
 import com.example.easyratetracker2.viewmodels.createPageListFromDataSourceFactory
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -31,16 +31,4 @@ abstract class NetworkModule {
         }
     }
 
-//    companion object {
-//        @Provides
-//        fun createOkHttpClientBuilder(): OkHttpClient.Builder {
-//            return OkHttpClient.Builder()
-//        }
-//
-//        @Singleton
-//        @Provides
-//        fun createCbrfApi(okHttpBuilder: OkHttpClient.Builder?): CbrfApi {
-//            return CbrfApi.Builder.build(okHttpBuilder)
-//        }
-//    }
 }

@@ -6,4 +6,4 @@ import dagger.hilt.testing.TestInstallIn
 
 @TestInstallIn(components = [ViewModelComponent::class], replaces = [NetworkVMScopeModule::class])
 @Module
-abstract class NetworkVMScopeTestModule {}
+abstract class NetworkVMScopeTestModule

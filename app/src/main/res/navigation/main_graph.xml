@@ -5,12 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/content_main">
 
-<!--    <fragment-->
-<!--        android:id="@+id/content_main"-->
-<!--        android:name="com.example.easyratetracker2.ui.lists.UntrackedRates"-->
-<!--        tools:layout="@layout/content_main">-->
-<!--    </fragment>-->
-
     <fragment
         android:id="@+id/content_main"
         android:name="com.example.easyratetracker2.ui.ContentMainFragment"

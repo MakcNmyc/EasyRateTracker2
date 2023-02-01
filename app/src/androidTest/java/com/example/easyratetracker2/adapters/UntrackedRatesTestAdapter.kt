@@ -9,7 +9,7 @@ import javax.inject.Inject
 class UntrackedRatesTestAdapter @Inject constructor(itemCallback: ItemCallback<UntrackedRatesElementModel>)
     : UntrackedRatesAdapter(itemCallback) {
 
-    private val obs: LoadElementObserver = LoadElementObserver()
+    val obs: LoadElementObserver = LoadElementObserver()
 
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         obs.onElementAdd(holder)
@@ -21,7 +21,4 @@ class UntrackedRatesTestAdapter @Inject constructor(itemCallback: ItemCallback<U
         super.onViewDetachedFromWindow(holder)
     }
 
-    fun getObs(): LoadElementObserver {
-        return obs
-    }
 }

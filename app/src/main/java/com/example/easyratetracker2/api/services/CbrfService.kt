@@ -15,7 +15,7 @@ interface CbrfService {
 
     class CbrfServiceImp @Inject constructor(@ApplicationContext context: Context) : CbrfService {
         @Inject lateinit var cbrfApi: CbrfApi
-        var primaryLang: String = MultilingualSup.getPrimaryLanguage(context)
+        private var primaryLang: String = MultilingualSup.getPrimaryLanguage(context)
         private var supportedLanguages: List<String> = listOf(SUPPORTED_LANGUAGE_RU, SUPPORTED_LANGUAGE_EN)
 
         override suspend fun getLatestCurrencyRate(): LatestRates =

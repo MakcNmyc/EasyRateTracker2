@@ -10,7 +10,6 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.example.easyratetracker2.adapters.StateDisplayAdapter
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.ListElementModel
@@ -42,16 +41,6 @@ inline fun <T> Fragment.setUpPagedList(
 ){
     pagedListProducer().observe(this) { newPagedList -> pagedAdapter.submitList(newPagedList) }
 }
-
-//fun <T> ViewModel.initPagedList(factory: DataSource.Factory<*, T>): LiveData<PagedList<T>> {
-//    return PagedList.Config.Builder()
-//        .setEnablePlaceholders(false)
-//        .setPageSize(Settings.PAGE_SIZE)
-//        .build()
-//        .let { config ->
-//            LivePagedListBuilder(factory, config).build()
-//        }
-//}
 
 inline fun <T: ListElementModel<*>> Fragment.setUpNetworkList(
     recyclerView: RecyclerView,

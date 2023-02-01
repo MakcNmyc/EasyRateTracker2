@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import java.util.*
-import java.util.stream.IntStream
 
 object RecyclerViewMatchers {
 

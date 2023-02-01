@@ -27,7 +27,7 @@ class CbrfLatestUntrackedElement @Inject constructor() : PositionalSourceExecuto
                         .drop(startPosition)
                         .take(loadSize)
                         .map { UntrackedRatesElementModel(it) }
-                        .toList());
+                        .toList())
             } catch (e: Throwable) {
                 errorHandler(e)
             }

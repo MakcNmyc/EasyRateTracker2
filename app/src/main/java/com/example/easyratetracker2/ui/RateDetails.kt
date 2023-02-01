@@ -24,7 +24,7 @@ class RateDetails: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = createBinding(inflater, container, RateDetailsBinding::inflate)
 
         binding.viewModel = viewModel
