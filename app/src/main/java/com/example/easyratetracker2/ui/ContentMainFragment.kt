@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.easyratetracker2.R
@@ -23,6 +24,7 @@ class ContentMainFragment: Fragment() {
     ): View {
         return createBinding(inflater, container, ContentMainBinding::inflate)
             .apply {
+                (activity as AppCompatActivity).setSupportActionBar(toolbar)
                 viewPager.adapter = ContentMainPagerAdapter(this@ContentMainFragment)
                 TabLayoutMediator(
                     tabLayout,
