@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
-            android:background="@color/purple_200"
+            android:background="?attr/colorPrimary"
             android:contentDescription="@string/floating_add_button"
             android:src="@drawable/ic_plus"
             app:fabCustomSize="70dp"
