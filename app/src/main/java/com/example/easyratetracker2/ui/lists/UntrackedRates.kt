@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import com.example.easyratetracker2.adapters.UntrackedRatesAdapter
+import com.example.easyratetracker2.data.models.OuterDetailsModel
 import com.example.easyratetracker2.databinding.UntrackedRatesBinding
 import com.example.easyratetracker2.ui.MainActivity
 import com.example.easyratetracker2.ui.createBinding
@@ -40,6 +42,12 @@ class UntrackedRates : Fragment() {
         adapter.navController = MainActivity.getNavController(this)
 
         binding.viewModel = viewModel
+
+        binding.sourceDescription.setOnClickListener { v ->
+            Navigation.findNavController(v).navigate(
+                UntrackedRatesDirections.actionUntrackedRatesListToSourceSelectionList()
+            )
+        }
 
         return binding.root
     }

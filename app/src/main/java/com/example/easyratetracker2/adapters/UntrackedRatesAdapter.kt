@@ -28,11 +28,10 @@ open class UntrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<
         binding: UntrackedRatesElementBinding
     ) {
         binding.model = model
-        val navControllerLocal = navController
 
-        navControllerLocal?.let {
+        navController?.let { nc ->
             binding.root.setOnClickListener {
-                navControllerLocal.navigate(
+                nc.navigate(
                     ContentMainFragmentDirections.actionContentMainToRateDetails(
                         OuterDetailsModel(model)))
             }
