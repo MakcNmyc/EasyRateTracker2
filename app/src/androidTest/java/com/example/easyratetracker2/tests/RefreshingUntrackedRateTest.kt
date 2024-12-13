@@ -104,6 +104,7 @@ class RefreshingUntrackedRateTest {
         assertThat(pageListBefore, sameInstance(pageListAfter))
     }
 
+    // TODO: update to paging 3
 //    private suspend fun refreshUntrackedRate(scope: CoroutineScope) {
 //        suspendCoroutine<Unit> { continuation ->
 //            activityRule.scenario.onActivity { activity ->
