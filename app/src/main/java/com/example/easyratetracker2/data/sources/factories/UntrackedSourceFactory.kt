@@ -1,9 +1,7 @@
 package com.example.easyratetracker2.data.sources.factories
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.data.sources.PositionRateSource
@@ -16,12 +14,25 @@ import javax.inject.Inject
 class UntrackedSourceFactory @Inject constructor(private val networkObserver: NetworkObserver,
                                                  @ApplicationContext private var context: Context){
 
-    fun create(receivingMethod: Int, vm: ViewModel): DataSource<*, UntrackedRatesElementModel> {
+    @Suppress("UNCHECKED_CAST")
+    fun <K: Any> create(receivingMethod: Int): PagingSource<K, UntrackedRatesElementModel> {
+
         return when (receivingMethod) {
-            ServiceSourceExecutor.CBRF_SERVICE -> PositionRateSource(networkObserver,
-                vm.viewModelScope,
-                fromApplication(context, AppEntryPoint::class.java).createCbrfLatestUntrackedElementExecutor())
+            ServiceSourceExecutor.CBRF_SERVICE -> PositionRateSource(
+                networkObserver,
+                fromApplication(
+                    context,
+                    AppEntryPoint::class.java
+                ).createCbrfLatestUntrackedElementExecutor()
+            )
+
+            else -> throw IndexOutOfBoundsException()
+        } as PagingSource<K, UntrackedRatesElementModel>
+    }
+
+    fun getInitialKey(receivingMethod: Int) : Any =
+        when (receivingMethod) {
+            ServiceSourceExecutor.CBRF_SERVICE -> PositionRateSource.INITIAL_KEY
             else -> throw IndexOutOfBoundsException()
         }
-    }
 }

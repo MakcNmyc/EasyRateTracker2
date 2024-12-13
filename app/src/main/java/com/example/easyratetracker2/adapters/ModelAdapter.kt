@@ -5,13 +5,14 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.data.models.ListElementModel
 
 abstract class ModelAdapter<V : ListElementModel<*>>(
     itemCallback: ItemCallback<V>,
-) : PagedListAdapter<V, RecyclerView.ViewHolder>(itemCallback) {
+) : PagingDataAdapter<V, RecyclerView.ViewHolder>(itemCallback) {
 
     abstract val vhProducer: (parent: ViewGroup) -> ModelViewHolder<V, *>
 

@@ -17,6 +17,7 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
 ) : ModelAdapter<V>(itemCallback) {
 
     private lateinit var observer: NetworkObserver
+    private var recyclerView: RecyclerView? = null
 
     var hasDecorationItem = true
 
@@ -39,11 +40,8 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
         return ITEM
     }
 
-    override fun getItemCount(): Int {
-        return super.getItemCount() + if (hasDecorationItems()) 1 else 0
-    }
-
-    fun setUpObserver(newObserver: NetworkObserver, owner: LifecycleOwner){
+    fun setUpObserver(newObserver: NetworkObserver, owner: LifecycleOwner, recyclerView: RecyclerView){
+        this.recyclerView = recyclerView
         if(::observer.isInitialized) return
         observer = newObserver
         observer.observeStatus(owner, this::onNetworkStatusChange)
@@ -62,9 +60,9 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
         val itemCount: Int = itemCount
         if (hadDecorationItems != hasDecorationItems) {
             if (hadDecorationItems) {
-                notifyItemRemoved(itemCount)
+                recyclerView?.post{notifyItemRemoved(itemCount)}
             } else {
-                notifyItemInserted(itemCount)
+                recyclerView?.post{notifyItemInserted(itemCount)}
             }
         } else if (hasDecorationItems && newStatus != previousStatus) {
             notifyItemChanged(if (itemCount == 0) 0 else itemCount - 1)

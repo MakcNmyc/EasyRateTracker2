@@ -1,6 +1,6 @@
 package com.example.easyratetracker2.data.dao
 
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.easyratetracker2.data.models.SourceSelectionModel
@@ -13,7 +13,7 @@ interface SelectableSourceDao : BaseDao<SelectableSource> {
     @Query("SELECT id, name, description, currency, receiving_method " +
             "FROM $TABLE_NAME_SELECTABLE_SOURCES " +
             "WHERE language = :language")
-    fun getAllSourcesForList(language: String): DataSource.Factory<Int, SourceSelectionModel>
+    fun getAllSourcesForList(language: String): PagingSource<Int, SourceSelectionModel>
 
     @Query(
         "SELECT " +

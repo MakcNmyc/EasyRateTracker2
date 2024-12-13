@@ -26,12 +26,12 @@ class SourceSelectionList : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return createBinding(inflater, container, SourceSelectionListBinding::inflate).also { binding ->
-            viewModel.initNewPageList {
-                setUpBaseList(
-                    binding.sourceSelectionList,
-                    { viewModel.pagedList!! },
-                    adapter)
-            }
+            // TODO: change to state observer then user can see load animation when sources init or take init in first launch app
+            setUpBaseList(
+                binding.sourceSelectionList,
+                viewModel.sourceList,
+                adapter
+            )
         }.root
     }
 

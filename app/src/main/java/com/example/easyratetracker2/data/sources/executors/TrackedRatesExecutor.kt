@@ -5,42 +5,43 @@ import com.example.easyratetracker2.data.models.TrackedRatesElementModel
 import com.example.easyratetracker2.data.repositories.TrackedRateRepository
 import com.example.easyratetracker2.di.AppEntryPoint
 import dagger.hilt.android.EntryPointAccessors
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import javax.inject.Inject
 
 class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<TrackedRatesElementModel>(){
 
     @Inject lateinit var repository: TrackedRateRepository
 
-    override fun execute(
-        scope: CoroutineScope,
+
+    override suspend fun execute(
         startPosition: Int,
-        loadSize: Int,
-        resultHandler: (result: List<TrackedRatesElementModel>) -> Unit,
-        errorHandler: (e: Throwable) -> Unit
-    ) {
-        scope.launch (Dispatchers.IO){
-            val ids = repository.getTrackedIds(startPosition, loadSize)
+        loadSize: Int
+    ) = try {
+            createResult(startPosition, loadSize, this::fetchData)
+        } catch (e: Throwable) {
+            createErrorResult(e)
+        }
 
-            if(ids.isEmpty()) {
-                resultHandler(emptyList())
-                return@launch
-            }
-
-            try {
+    @OptIn(FlowPreview::class)
+    private suspend fun fetchData(startPosition: Int, loadSize: Int) =
+        repository.getTrackedIds(startPosition, loadSize).let { ids ->
+            if (ids.isEmpty()) return emptyList<TrackedRatesElementModel>() else
                 ids.groupBy { it.sourceId }
                     .map { getDataFromService(it.key, it.value) }
                     .asFlow()
                     .flatMapMerge { it }
                     .flowOn(Dispatchers.Default)
                     .toList()
-                    .let { result ->  resultHandler(result)}
-            } catch (e: Throwable) {
-                errorHandler(e)
-            }
         }
-    }
+
 
     private suspend fun getDataFromService(sourceId: Int, filteredList: List<TrackedIdModel>): Flow<TrackedRatesElementModel> {
         return when (sourceId) {

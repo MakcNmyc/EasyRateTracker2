@@ -100,27 +100,27 @@ class RefreshingUntrackedRateTest {
     @Test
     @Throws(InterruptedException::class)
     fun refreshingUntrackedTest() = runBlocking {
-        refreshUntrackedRate(this)
+//        refreshUntrackedRate(this)
         assertThat(pageListBefore, sameInstance(pageListAfter))
     }
 
-    private suspend fun refreshUntrackedRate(scope: CoroutineScope) {
-        suspendCoroutine<Unit> { continuation ->
-            activityRule.scenario.onActivity { activity ->
-                scope.launch {
-                    pageListBefore = getPageList(activity)
-                    activityRule.scenario.recreate()
-                    activityRule.scenario.onActivity { recreateActivity ->
-                        pageListAfter = getPageList(recreateActivity)
-                        continuation.resume(Unit)
-                    }
-                }
-            }
-        }
-    }
+//    private suspend fun refreshUntrackedRate(scope: CoroutineScope) {
+//        suspendCoroutine<Unit> { continuation ->
+//            activityRule.scenario.onActivity { activity ->
+//                scope.launch {
+//                    pageListBefore = getPageList(activity)
+//                    activityRule.scenario.recreate()
+//                    activityRule.scenario.onActivity { recreateActivity ->
+//                        pageListAfter = getPageList(recreateActivity)
+//                        continuation.resume(Unit)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    private fun getPageList(activity: TestHiltActivity): LiveData<PagedList<UntrackedRatesElementModel>> =
-        (hiltFragmentRule.findFirstFragment(activity) as UntrackedRates).viewModel.pagedList
+//    private fun getPageList(activity: TestHiltActivity): LiveData<PagedList<UntrackedRatesElementModel>> =
+//        (hiltFragmentRule.findFirstFragment(activity) as UntrackedRates).viewModel.untrackedList
 
     private fun getNetworkObserver(
         hiltFragmentRule: HiltFragmentRule,

@@ -1,29 +1,30 @@
 package com.example.easyratetracker2.viewmodels.lists
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagedList
+import androidx.paging.PagingData
 import com.example.easyratetracker2.data.models.SourceSelectionModel
 import com.example.easyratetracker2.data.repositories.SelectableSourceRepository
-import com.example.easyratetracker2.viewmodels.createPageListFromDataSourceFactory
+import com.example.easyratetracker2.viewmodels.createPagingDataFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SourceSelectionViewModel @Inject constructor(private var repository: SelectableSourceRepository) : ViewModel(){
 
-    var pagedList: LiveData<PagedList<SourceSelectionModel>>? = null
+    private val _sourceList = MutableStateFlow<Flow<PagingData<SourceSelectionModel>>?>(null)
+    val sourceList: Flow<Flow<PagingData<SourceSelectionModel>>?> = _sourceList
 
-    fun initNewPageList(onInitCallback: (pagedList: LiveData<PagedList<SourceSelectionModel>>) -> Unit){
-        checkSelectableSources{
-            val pagedListLocal = repository.getAllSourcesForList().createPageListFromDataSourceFactory()
-            pagedList = pagedListLocal
-            onInitCallback(pagedListLocal)
-        }
+    init {
+        viewModelScope.launch { refreshSourceList() }
     }
 
-    private fun checkSelectableSources(onCheckCallback: () -> Unit) {
-        repository.checkSelectableSources(this.viewModelScope, onCheckCallback)
+    private suspend fun refreshSourceList(){
+        val source = repository.getAllSourcesForList()
+        _sourceList.value = viewModelScope.createPagingDataFlow(null){source}
     }
+
 }

@@ -14,7 +14,7 @@ buildscript {
         dagger_version = "2.42"
         hilt_version = "2.44"
         material_version = "1.6.0"
-        paging_version = "2.1.2"
+        paging_version = "3.1.1"
         espresso_version = "3.4.0"
         recycler_view_version = "1.1.0"
         swipe_refresh_layout_version = "1.1.0"

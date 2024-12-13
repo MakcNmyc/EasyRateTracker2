@@ -1,16 +1,20 @@
 package com.example.easyratetracker2.viewmodels.lists
 
-import androidx.lifecycle.*
-import androidx.paging.DataSource
-import androidx.paging.PagedList
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.UntrackedListModel
 import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.data.sources.factories.UntrackedSourceFactory
-import com.example.easyratetracker2.viewmodels.createPageListFromDataSourceFactory
+import com.example.easyratetracker2.viewmodels.createPagingDataFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,40 +25,34 @@ class UntrackedRatesViewModel @Inject constructor(
     @Inject lateinit var networkObserver: NetworkObserver
     @Inject internal lateinit var sourceFactory: UntrackedSourceFactory
 
-    val model: MutableLiveData<UntrackedListModel> = MutableLiveData()
+    val model: StateFlow<UntrackedListModel?> = savedStateHandle.getStateFlow(MODEL_NAME, null)
 
-    init {
+    private val _untrackedRateList = MutableStateFlow<Flow<PagingData<UntrackedRatesElementModel>>?>(null)
+
+    fun init(){
         viewModelScope.launch {
-            model.postValue(savedStateHandle[MODEL_NAME])
-        }
-    }
-
-    var pagedList = createNewPagedList()
-
-    private fun createNewPagedList(): LiveData<PagedList<UntrackedRatesElementModel>>{
-        return Transformations.switchMap(model) { v ->
-            if (v != null) {
-                createPageList()
-            } else {
-                MutableLiveData()
+            model.collectLatest{
+                if (it != null) {
+                    refreshRateList(it.receivingMethod)
+                }
             }
         }
     }
 
-    fun refreshPagedList(){
-        pagedList = createNewPagedList()
-    }
+    val untrackedRateList: Flow<Flow<PagingData<UntrackedRatesElementModel>>?> = _untrackedRateList
 
-    private fun createPageList(): LiveData<PagedList<UntrackedRatesElementModel>> =
-        createSourceFactory().createPageListFromDataSourceFactory()
-
-    @Suppress("UNCHECKED_CAST")
-    private fun createSourceFactory(): DataSource.Factory<Any, UntrackedRatesElementModel> {
-        return object : DataSource.Factory<Any, UntrackedRatesElementModel>() {
-            override fun create(): DataSource<Any, UntrackedRatesElementModel> {
-                return sourceFactory.create(model.value!!.receivingMethod, this@UntrackedRatesViewModel) as DataSource<Any, UntrackedRatesElementModel>
+    fun refreshRateList(){
+        model.value?.let {
+            viewModelScope.launch {
+                refreshRateList(it.receivingMethod)
             }
         }
+    }
+
+    private fun refreshRateList(receivingMethod: Int){
+        _untrackedRateList.value =  viewModelScope.createPagingDataFlow(
+            sourceFactory.getInitialKey(receivingMethod)
+        ) { sourceFactory.create(receivingMethod)}
     }
 
     companion object {

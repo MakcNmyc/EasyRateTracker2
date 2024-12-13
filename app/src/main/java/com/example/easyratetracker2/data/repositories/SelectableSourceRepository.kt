@@ -3,6 +3,7 @@ package com.example.easyratetracker2.data.repositories
 import android.content.Context
 import android.util.Log
 import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.work.*
 import com.example.easyratetracker2.MultilingualSup
 import com.example.easyratetracker2.MultilingualSup.Companion.SUPPORTED_LANGUAGE_EN
@@ -41,16 +42,8 @@ class SelectableSourceRepository @Inject constructor(
         MultilingualSup.getPrimaryLanguage(context)
     )
 
-    fun getAllSourcesForList() : DataSource.Factory<Int, SourceSelectionModel>
-        = selectableDao.getAllSourcesForList(currentLanguage)
-
-    fun checkSelectableSources(scope: CoroutineScope, callback: () -> Unit) {
-        val lang = currentLanguage
-
-        scope.launch{
-            if(!selectableDao.selectableResourcesIsInitialized(lang)) initSelectableSources(lang)
-            callback()
-        }
+    private suspend fun checkSelectableSources() {
+        if(!selectableDao.selectableResourcesIsInitialized(currentLanguage)) initSelectableSources(currentLanguage)
     }
 
     private fun initSelectableSources(lang: String) {
@@ -67,6 +60,11 @@ class SelectableSourceRepository @Inject constructor(
                     .build()
             )
         }
+    }
+
+    suspend fun getAllSourcesForList() : PagingSource<Int, SourceSelectionModel>{
+        checkSelectableSources()
+        return selectableDao.getAllSourcesForList(currentLanguage)
     }
 
     private fun takeFileName(lang: String) =

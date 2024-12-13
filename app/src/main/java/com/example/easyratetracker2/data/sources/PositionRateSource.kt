@@ -1,63 +1,41 @@
 package com.example.easyratetracker2.data.sources
 
-import androidx.paging.PositionalDataSource
+import android.os.Looper
+import android.util.Log
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.sources.executors.PositionalSourceExecutor
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
-class PositionRateSource<T>(
+class PositionRateSource<T: Any>(
     private val networkObserver: NetworkObserver,
-    private val scope: CoroutineScope,
     private val executor: PositionalSourceExecutor<T>,
-) : PositionalDataSource<T>() {
+) : PagingSource<Int, T>() {
 
-    private var dataStoreEnded = false
+    override fun getRefreshKey(state: PagingState<Int, T>): Int =
+        state.anchorPosition?.plus(1) ?: 0
 
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
-        startRequest(
-            params.requestedStartPosition,
-            params.requestedLoadSize,
-        ) { result -> callback.onResult(result, params.requestedStartPosition) }
-    }
-
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
-        startRequest(
-            params.startPosition,
-            params.loadSize,
-            callback::onResult
-        )
-    }
-
-    private fun startRequest(startPosition: Int,
-                             requiredLoadSize: Int,
-                             resultNotify: (result: List<T>) -> Unit) {
-
-        if (dataStoreEnded && startPosition != 0) {
-            resultHandler(requiredLoadSize, resultNotify).invoke(emptyList())
-            return
-        }
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
 
         networkObserver.status = NetworkObserver.Status.LOADING
-        executor.execute(
-            scope,
-            startPosition,
-            requiredLoadSize,
-            resultHandler(requiredLoadSize, resultNotify),
-            this::onError)
-    }
 
-    private fun onError(e: Throwable) {
-        networkObserver.addError(e)
-    }
+        return withContext(Dispatchers.IO) {
 
-    private inline fun resultHandler(
-        requiredLoadSize: Int,
-        crossinline resultNotify: (result: List<T>) -> Unit,
-    ): (result: List<T>) -> Unit =
-        { result: List<T> ->
-            if (result.size < requiredLoadSize)
-                dataStoreEnded = true
-            networkObserver.status = NetworkObserver.Status.READY
-            resultNotify(result)
+            executor.execute(params.key ?: 0, params.loadSize)
+        }.also {
+            when (it) {
+                is LoadResult.Error -> networkObserver.addError(it.throwable)
+                else -> networkObserver.status = NetworkObserver.Status.READY
+            }
         }
+    }
+
+    companion object{
+        const val INITIAL_KEY = 0
+    }
+
 }
