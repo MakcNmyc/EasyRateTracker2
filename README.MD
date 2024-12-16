@@ -4,7 +4,7 @@
 
 # EasyRateTracker2
 
-My android jetpack app 
+My android jetpack app sample
 
 ## App idea
 
