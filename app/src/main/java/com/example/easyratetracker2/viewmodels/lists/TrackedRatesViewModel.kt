@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.room.InvalidationTracker
 import com.example.easyratetracker2.adapters.util.NetworkObserver
-import com.example.easyratetracker2.data.models.TrackedRatesElementModel
+import com.example.easyratetracker2.data.models.RatesElementModel
 import com.example.easyratetracker2.data.sources.PositionRateSource
 import com.example.easyratetracker2.data.sources.executors.TrackedRatesExecutor
 import com.example.easyratetracker2.data.store.database.AppDatabase
@@ -21,7 +21,7 @@ class TrackedRatesViewModel @Inject constructor(val networkObserver: NetworkObse
                                                 val database: AppDatabase) : ViewModel() {
 
     private val _trackedRateList = MutableStateFlow(createRateList())
-    val trackedRateList: Flow<Flow<PagingData<TrackedRatesElementModel>>> = _trackedRateList
+    val trackedRateList: Flow<Flow<PagingData<RatesElementModel>>> = _trackedRateList
 
     private val refreshObserver = object : InvalidationTracker.Observer(AppDatabase.TABLE_NAME_TRACKED_RATES) {
         override fun onInvalidated(tables: Set<String>) {

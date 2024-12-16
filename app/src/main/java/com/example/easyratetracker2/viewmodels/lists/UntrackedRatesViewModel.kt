@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.UntrackedListModel
-import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
+import com.example.easyratetracker2.data.models.RatesElementModel
 import com.example.easyratetracker2.data.sources.factories.UntrackedSourceFactory
 import com.example.easyratetracker2.viewmodels.createPagingDataFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +27,7 @@ class UntrackedRatesViewModel @Inject constructor(
 
     val model: StateFlow<UntrackedListModel?> = savedStateHandle.getStateFlow(MODEL_NAME, null)
 
-    private val _untrackedRateList = MutableStateFlow<Flow<PagingData<UntrackedRatesElementModel>>?>(null)
+    private val _untrackedRateList = MutableStateFlow<Flow<PagingData<RatesElementModel>>?>(null)
 
     fun init(){
         viewModelScope.launch {
@@ -39,7 +39,7 @@ class UntrackedRatesViewModel @Inject constructor(
         }
     }
 
-    val untrackedRateList: Flow<Flow<PagingData<UntrackedRatesElementModel>>?> = _untrackedRateList
+    val untrackedRateList: Flow<Flow<PagingData<RatesElementModel>>?> = _untrackedRateList
 
     fun refreshRateList(){
         model.value?.let {

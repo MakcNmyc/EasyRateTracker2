@@ -10,14 +10,7 @@ data class OuterDetailsModel(
     val currentRate: String,
     val sourceId: Int
 ): Parcelable {
-    constructor(el: UntrackedRatesElementModel) : this(
-        el.id,
-        el.headline,
-        el.rate,
-        el.sourceId
-    )
-
-    constructor(el: TrackedRatesElementModel) : this(
+    constructor(el: RatesElementModel) : this(
         el.id,
         el.headline,
         el.rate,

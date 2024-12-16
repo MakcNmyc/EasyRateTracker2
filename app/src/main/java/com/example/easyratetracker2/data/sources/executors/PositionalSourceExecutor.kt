@@ -1,7 +1,6 @@
 package com.example.easyratetracker2.data.sources.executors
 
 import androidx.paging.PagingSource.LoadResult
-import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.data.sources.PositionRateSource
 import kotlin.reflect.KSuspendFunction2
 

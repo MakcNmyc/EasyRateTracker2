@@ -4,26 +4,26 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.data.models.OuterDetailsModel
-import com.example.easyratetracker2.data.models.TrackedRatesElementModel
-import com.example.easyratetracker2.databinding.TrackedRatesElementBinding
+import com.example.easyratetracker2.data.models.RatesElementModel
+import com.example.easyratetracker2.databinding.RatesElementBinding
 import com.example.easyratetracker2.ui.ContentMainFragmentDirections
 import javax.inject.Inject
 
-open class TrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<TrackedRatesElementModel>) :
-    StateDisplayAdapter<TrackedRatesElementModel>(itemCallback) {
+class TrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<RatesElementModel>) :
+    StateDisplayAdapter<RatesElementModel>(itemCallback) {
 
-    override val vhProducer: (parent: ViewGroup) -> ModelViewHolder<TrackedRatesElementModel, TrackedRatesElementBinding> =
+    override val vhProducer: (parent: ViewGroup) -> ModelViewHolder<RatesElementModel, RatesElementBinding> =
         { parent ->
             ModelViewHolder(
                 parent,
-                TrackedRatesElementBinding::inflate,
+                RatesElementBinding::inflate,
                 this::setUpData
             )
         }
 
     private fun setUpData(
-        model: TrackedRatesElementModel,
-        binding: TrackedRatesElementBinding
+        model: RatesElementModel,
+        binding: RatesElementBinding
     ) {
         binding.model = model
         binding.root.setOnClickListener{ v ->

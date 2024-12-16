@@ -1,14 +1,10 @@
 package com.example.easyratetracker2.data.sources
 
-import android.os.Looper
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.sources.executors.PositionalSourceExecutor
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class PositionRateSource<T: Any>(
@@ -24,7 +20,6 @@ class PositionRateSource<T: Any>(
         networkObserver.status = NetworkObserver.Status.LOADING
 
         return withContext(Dispatchers.IO) {
-
             executor.execute(params.key ?: 0, params.loadSize)
         }.also {
             when (it) {

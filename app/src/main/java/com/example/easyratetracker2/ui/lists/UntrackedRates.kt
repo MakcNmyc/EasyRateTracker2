@@ -11,8 +11,7 @@ import com.example.easyratetracker2.adapters.UntrackedRatesAdapter
 import com.example.easyratetracker2.databinding.UntrackedRatesBinding
 import com.example.easyratetracker2.ui.MainActivity
 import com.example.easyratetracker2.ui.createBinding
-import com.example.easyratetracker2.ui.setUpBaseList
-import com.example.easyratetracker2.ui.setUpNetworkList
+import com.example.easyratetracker2.ui.setUpStateDisplayList
 import com.example.easyratetracker2.viewmodels.lists.UntrackedRatesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -32,12 +31,12 @@ class UntrackedRates : Fragment() {
 
         viewModel.init()
 
-        setUpNetworkList(
-            binding.untrackedRatesList,
+        setUpStateDisplayList(
+            binding.stateDisplayList,
             viewModel.untrackedRateList,
             adapter,
             viewModel.networkObserver,
-            binding.swipeRefresh
+            binding.stateDisplayList.swipeRefresh
         ) { viewModel.refreshRateList() }
 
         adapter.navController = MainActivity.getNavController(this)

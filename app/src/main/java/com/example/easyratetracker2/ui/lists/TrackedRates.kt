@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.easyratetracker2.adapters.TrackedRatesAdapter
-import com.example.easyratetracker2.databinding.TrackedRatesBinding
+import com.example.easyratetracker2.databinding.StateDisplayListBinding
 import com.example.easyratetracker2.ui.createBinding
-import com.example.easyratetracker2.ui.setUpBaseList
-import com.example.easyratetracker2.ui.setUpNetworkList
+import com.example.easyratetracker2.ui.setUpStateDisplayList
 import com.example.easyratetracker2.viewmodels.lists.TrackedRatesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,15 +25,17 @@ class TrackedRates : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return createBinding(inflater, container, TrackedRatesBinding::inflate)
+        return createBinding(inflater, container, StateDisplayListBinding::inflate)
             .also { binding ->
-                setUpNetworkList(
-                    binding.trackedRatesList,
+
+                setUpStateDisplayList(
+                    binding,
                     viewModel.trackedRateList,
                     adapter,
                     viewModel.networkObserver,
                     binding.swipeRefresh
                 ) { viewModel.refreshRateList() }
+
             }.root
     }
 }

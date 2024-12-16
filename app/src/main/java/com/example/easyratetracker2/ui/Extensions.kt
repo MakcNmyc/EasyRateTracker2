@@ -1,15 +1,11 @@
 package com.example.easyratetracker2.ui
 
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.PagedList
-import androidx.paging.PagedListAdapter
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.easyratetracker2.adapters.StateDisplayAdapter
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.ListElementModel
-import kotlinx.coroutines.Dispatchers
+import com.example.easyratetracker2.databinding.StateDisplayListBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -31,22 +27,36 @@ inline fun <T : ViewDataBinding> Fragment.createBinding(
     lifecycleOwner = this@createBinding
 }
 
-inline fun <T: ListElementModel<*>> Fragment.setUpNetworkList(
-    recyclerView: RecyclerView,
+inline fun <T: ListElementModel<*>> Fragment.setUpStateDisplayList(
+    binding: StateDisplayListBinding,
     dataProducer: Flow<Flow<PagingData<T>>?>,
     pagedAdapter: StateDisplayAdapter<T>,
     observer: NetworkObserver,
     swipeRefresh: SwipeRefreshLayout,
     crossinline pagedListRefresher: () -> Unit,
 ) {
-    setUpBaseList(recyclerView, dataProducer, pagedAdapter)
+    setUpBaseList(binding.list, dataProducer, pagedAdapter)
     this.view
-    pagedAdapter.setUpObserver(observer, this, recyclerView)
+    pagedAdapter.setUpObserver(observer, this, binding.list)
     swipeRefresh.setOnRefreshListener {
         //skip widget animation
         swipeRefresh.isRefreshing = false
         pagedListRefresher()
         this.setUpPagedList(dataProducer, pagedAdapter)
+    }
+
+    observer.observeStatus(this.viewLifecycleOwner){ status ->
+        binding.let {
+            when(status){
+                NetworkObserver.Status.ERROR -> {
+                    it.loadingBar.visibility = View.GONE
+                    it.list.visibility = View.GONE
+                    it.errorText.visibility = View.VISIBLE
+                    it.errorText.text = observer.errorsDescription
+                }
+                NetworkObserver.Status.READY -> it.loadingBar.visibility = View.GONE
+            }
+        }
     }
 }
 

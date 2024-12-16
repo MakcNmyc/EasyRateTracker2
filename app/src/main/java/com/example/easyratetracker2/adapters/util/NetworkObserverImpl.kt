@@ -18,18 +18,19 @@ class NetworkObserverImpl @Inject constructor(): NetworkObserver {
     private val errors: MutableList<Throwable> by lazy{ArrayList()}
     override var previousStatus: Int? = null
 
+    //TODO: refactor to state flow
     private var _status: MutableLiveData<Int> = MutableLiveData(Status.INIT)
     override var status
         get() = _status.value!!
-        set(newValue) {
+        set(newStatus) {
             synchronized(this){
-                _status.value.let { currentValue ->
-                    if (currentValue != Status.ERROR && newValue == Status.ERROR) errors.clear()
-                    previousStatus = currentValue
+                _status.value.let { previousStatus ->
+                    if(previousStatus == newStatus) return
+                    if (newStatus != Status.ERROR && errors.size > 0) errors.clear()
                     if (Looper.myLooper() == Looper.getMainLooper()) {
-                        _status.value = newValue
+                        _status.value = newStatus
                     } else {
-                        _status.postValue(newValue)
+                        _status.postValue(newStatus)
                     }
                 }
             }
@@ -48,8 +49,8 @@ class NetworkObserverImpl @Inject constructor(): NetworkObserver {
     }
 
     override fun addError(e: Throwable) {
-        status = Status.ERROR
         errors.add(e)
+        status = Status.ERROR
     }
 
     override val errorsDescription: String
