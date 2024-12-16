@@ -13,7 +13,7 @@ import com.example.easyratetracker2.databinding.ListLoadElementBinding
 abstract class StateDisplayAdapter<V : ListElementModel<*>>(
     itemCallback: ItemCallback<V>,
     val errorProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultErrorProducer,
-    val loadProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultLoadProducer
+    val loadProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = {p,_ -> defaultLoadProducer(p) }
 ) : ModelAdapter<V>(itemCallback) {
 
     private lateinit var observer: NetworkObserver
@@ -91,7 +91,7 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
             )
         }
 
-        private fun defaultLoadProducer(parent: ViewGroup, observer : NetworkObserver): BindingViewHolder<ListLoadElementBinding> {
+        private fun defaultLoadProducer(parent: ViewGroup): BindingViewHolder<ListLoadElementBinding> {
             return BindingViewHolder(parent, ListLoadElementBinding::inflate)
         }
     }
