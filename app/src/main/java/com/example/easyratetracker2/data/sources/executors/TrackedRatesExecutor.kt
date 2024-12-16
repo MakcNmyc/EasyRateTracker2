@@ -20,7 +20,6 @@ class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<Rate
 
     @Inject lateinit var repository: TrackedRateRepository
 
-
     override suspend fun execute(
         startPosition: Int,
         loadSize: Int
@@ -29,7 +28,6 @@ class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<Rate
         } catch (e: Throwable) {
             createErrorResult(e)
         }
-
 
     @OptIn(FlowPreview::class)
     private suspend fun fetchData(startPosition: Int, loadSize: Int) =
@@ -42,7 +40,6 @@ class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<Rate
                     .flowOn(Dispatchers.Default)
                     .toList()
         }
-
 
     private suspend fun getDataFromService(sourceId: Int, filteredList: List<TrackedIdModel>): Flow<RatesElementModel> {
         return when (sourceId) {
