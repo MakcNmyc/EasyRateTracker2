@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SourceSelectionList : Fragment() {
+class SourceSelectionListFragment : Fragment() {
 
     @Inject lateinit var adapter: SourceSelectionAdapter
     val viewModel: SourceSelectionViewModel by viewModels()

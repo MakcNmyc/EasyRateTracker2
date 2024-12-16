@@ -6,7 +6,7 @@ import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.data.models.SourceSelectionModel
 import com.example.easyratetracker2.data.models.UntrackedListModel
 import com.example.easyratetracker2.databinding.SourceSelectionElementBinding
-import com.example.easyratetracker2.ui.lists.SourceSelectionListDirections
+import com.example.easyratetracker2.ui.lists.SourceSelectionListFragmentDirections
 import javax.inject.Inject
 
 class SourceSelectionAdapter @Inject constructor(itemCallback: ItemCallback<SourceSelectionModel>) :
@@ -21,7 +21,7 @@ class SourceSelectionAdapter @Inject constructor(itemCallback: ItemCallback<Sour
                 binding.model = model
                 binding.root.setOnClickListener { view ->
                     Navigation.findNavController(view).navigate(
-                        SourceSelectionListDirections.actionSourceSelectionListToUntrackedRatesList(
+                        SourceSelectionListFragmentDirections.actionSourceSelectionListToUntrackedRatesList(
                             UntrackedListModel(model)
                         )
                     )

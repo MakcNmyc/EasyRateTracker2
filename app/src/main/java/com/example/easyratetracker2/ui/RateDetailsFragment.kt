@@ -16,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RateDetails: Fragment() {
+class RateDetailsFragment: Fragment() {
 
     val viewModel: RateDetailsViewModel by viewModels()
 

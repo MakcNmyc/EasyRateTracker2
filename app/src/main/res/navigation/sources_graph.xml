@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/source_selection_list"
-        android:name="com.example.easyratetracker2.ui.lists.SourceSelectionList"
+        android:name="com.example.easyratetracker2.ui.lists.SourceSelectionListFragment"
         tools:layout="@layout/source_selection_list">
         <action
             android:id="@+id/action_sourceSelectionList_to_untracked_rates_list"
@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/untracked_rates_list"
-        android:name="com.example.easyratetracker2.ui.lists.UntrackedRates"
+        android:name="com.example.easyratetracker2.ui.lists.UntrackedRatesFragment"
         tools:layout="@layout/untracked_rates">
         <argument
             android:name="untrackedListDescription"

@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TrackedRates : Fragment() {
+class TrackedRatesFragment : Fragment() {
 
     @Inject lateinit var adapter: TrackedRatesAdapter
     val viewModel: TrackedRatesViewModel by viewModels()

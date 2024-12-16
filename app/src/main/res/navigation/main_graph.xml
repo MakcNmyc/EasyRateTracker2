@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/rate_details"
-        android:name="com.example.easyratetracker2.ui.RateDetails"
+        android:name="com.example.easyratetracker2.ui.RateDetailsFragment"
         tools:layout="@layout/rate_details">
         <argument
             android:name="rateDetails"

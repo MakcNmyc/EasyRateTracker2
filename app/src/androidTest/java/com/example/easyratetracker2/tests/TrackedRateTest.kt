@@ -17,7 +17,7 @@ import com.example.easyratetracker2.data.repositories.TrackedRateRepository
 import com.example.easyratetracker2.data.sources.executors.ServiceSourceExecutor
 import com.example.easyratetracker2.rules.*
 import com.example.easyratetracker2.ui.TestHiltActivity
-import com.example.easyratetracker2.ui.lists.TrackedRates
+import com.example.easyratetracker2.ui.lists.TrackedRatesFragment
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -65,7 +65,7 @@ class TrackedRateTest {
     @get:Rule(order = 5)
     val hiltFragmentRule: HiltFragmentRule = HiltFragmentRule(
         { activityRule.scenario },
-        TrackedRates::class.java
+        TrackedRatesFragment::class.java
     )
 
     @get:Rule(order = 6)
@@ -146,13 +146,13 @@ class TrackedRateTest {
             hiltFragmentRule: HiltFragmentRule,
             activity: TestHiltActivity
         ): NetworkObserver =
-            (hiltFragmentRule.findFirstFragment(activity) as TrackedRates).viewModel.networkObserver
+            (hiltFragmentRule.findFirstFragment(activity) as TrackedRatesFragment).viewModel.networkObserver
 
         fun getLoadElement(
             hiltFragmentRule: HiltFragmentRule,
             activity: TestHiltActivity
         ): LoadElementObserver =
-            ((hiltFragmentRule.findFirstFragment(activity) as TrackedRates).adapter as TrackedRatesTestAdapter).obs
+            ((hiltFragmentRule.findFirstFragment(activity) as TrackedRatesFragment).adapter as TrackedRatesTestAdapter).obs
 
     }
 }

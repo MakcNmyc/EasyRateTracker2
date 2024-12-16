@@ -11,7 +11,7 @@ import com.example.easyratetracker2.R
 import com.example.easyratetracker2.databinding.ContentMainBinding
 import com.example.easyratetracker2.ui.ContentMainFragment.ContentMainPagerAdapter.Companion.SOURCES_NAVIGATION
 import com.example.easyratetracker2.ui.ContentMainFragment.ContentMainPagerAdapter.Companion.TRACKED_RATE
-import com.example.easyratetracker2.ui.lists.TrackedRates
+import com.example.easyratetracker2.ui.lists.TrackedRatesFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -46,8 +46,8 @@ class ContentMainFragment: Fragment() {
         override fun createFragment(position: Int): Fragment {
 
             return when(position){
-                TRACKED_RATE -> TrackedRates()
-                SOURCES_NAVIGATION -> SourcesNavigation()
+                TRACKED_RATE -> TrackedRatesFragment()
+                SOURCES_NAVIGATION -> SourcesNavigationFragment()
                 else -> throw IndexOutOfBoundsException()
             }
         }

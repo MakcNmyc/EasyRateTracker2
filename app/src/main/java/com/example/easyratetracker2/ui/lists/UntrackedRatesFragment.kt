@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UntrackedRates : Fragment() {
+class UntrackedRatesFragment : Fragment() {
 
     @Inject lateinit var adapter: UntrackedRatesAdapter
     val viewModel: UntrackedRatesViewModel by viewModels()
@@ -45,7 +45,7 @@ class UntrackedRates : Fragment() {
 
         binding.sourceDescription.setOnClickListener { v ->
             Navigation.findNavController(v).navigate(
-                UntrackedRatesDirections.actionUntrackedRatesListToSourceSelectionList()
+                UntrackedRatesFragmentDirections.actionUntrackedRatesListToSourceSelectionList()
             )
         }
 

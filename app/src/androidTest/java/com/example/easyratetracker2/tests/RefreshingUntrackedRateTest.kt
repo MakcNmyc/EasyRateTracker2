@@ -12,7 +12,7 @@ import com.example.easyratetracker2.data.models.UntrackedRatesElementModel
 import com.example.easyratetracker2.data.sources.executors.ServiceSourceExecutor
 import com.example.easyratetracker2.rules.*
 import com.example.easyratetracker2.ui.TestHiltActivity
-import com.example.easyratetracker2.ui.lists.UntrackedRates
+import com.example.easyratetracker2.ui.lists.UntrackedRatesFragment
 import com.example.easyratetracker2.viewmodels.lists.UntrackedRatesViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -27,8 +27,6 @@ import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 import java.util.*
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @HiltAndroidTest
 class RefreshingUntrackedRateTest {
@@ -58,7 +56,7 @@ class RefreshingUntrackedRateTest {
     @get:Rule(order = 5)
     val hiltFragmentRule: HiltFragmentRule = HiltFragmentRule(
         { activityRule.scenario },
-        UntrackedRates::class.java,
+        UntrackedRatesFragment::class.java,
         getArgsForUntrackedListItem()
     )
 
@@ -127,13 +125,13 @@ class RefreshingUntrackedRateTest {
         hiltFragmentRule: HiltFragmentRule,
         activity: TestHiltActivity
     ): NetworkObserver =
-        (hiltFragmentRule.findFirstFragment(activity) as UntrackedRates).viewModel.networkObserver
+        (hiltFragmentRule.findFirstFragment(activity) as UntrackedRatesFragment).viewModel.networkObserver
 
     private fun getLoadElement(
         hiltFragmentRule: HiltFragmentRule,
         activity: TestHiltActivity
     ): LoadElementObserver =
-        (((hiltFragmentRule.findFirstFragment(activity) as UntrackedRates).adapter)
+        (((hiltFragmentRule.findFirstFragment(activity) as UntrackedRatesFragment).adapter)
                 as UntrackedRatesTestAdapter).obs
 
 }

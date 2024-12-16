@@ -16,7 +16,7 @@ import com.example.easyratetracker2.rules.*
 import com.example.easyratetracker2.tests.TrackedRateTest.Companion.RESPONSE_HEADLINE
 import com.example.easyratetracker2.tests.TrackedRateTest.Companion.TEST_ITEM_OUTER_ID
 import com.example.easyratetracker2.ui.TestHiltActivity
-import com.example.easyratetracker2.ui.lists.TrackedRates
+import com.example.easyratetracker2.ui.lists.TrackedRatesFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +57,7 @@ class RefreshingTrackedRateTest {
     @get:Rule(order = 5)
     val hiltFragmentRule: HiltFragmentRule = HiltFragmentRule(
         { activityRule.scenario },
-        TrackedRates::class.java
+        TrackedRatesFragment::class.java
     )
 
     @get:Rule(order = 6)

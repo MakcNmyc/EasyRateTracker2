@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.easyratetracker2.databinding.SourcesNavigationBinding
 
-class SourcesNavigation : Fragment() {
+class SourcesNavigationFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
