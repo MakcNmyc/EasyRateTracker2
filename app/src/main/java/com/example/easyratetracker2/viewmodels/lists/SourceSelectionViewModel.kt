@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.example.easyratetracker2.data.models.SourceSelectionModel
 import com.example.easyratetracker2.data.repositories.SelectableSourceRepository
+import com.example.easyratetracker2.data.sources.PositionRateSource
 import com.example.easyratetracker2.viewmodels.createPagingDataFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -23,8 +24,14 @@ class SourceSelectionViewModel @Inject constructor(private var repository: Selec
     }
 
     private suspend fun refreshSourceList(){
-        val source = repository.getAllSourcesForList()
-        _sourceList.value = viewModelScope.createPagingDataFlow(null){source}
+
+        repository.checkSelectableSources()
+
+        _sourceList.value = viewModelScope.createPagingDataFlow(
+            PositionRateSource.INITIAL_KEY
+        ){
+            repository.getAllSourcesForList()
+        }
     }
 
 }

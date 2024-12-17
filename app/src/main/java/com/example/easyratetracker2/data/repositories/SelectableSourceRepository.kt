@@ -2,7 +2,6 @@ package com.example.easyratetracker2.data.repositories
 
 import android.content.Context
 import android.util.Log
-import androidx.paging.DataSource
 import androidx.paging.PagingSource
 import androidx.work.*
 import com.example.easyratetracker2.MultilingualSup
@@ -18,9 +17,7 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import dagger.hilt.android.EntryPointAccessors.fromApplication
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
@@ -42,7 +39,7 @@ class SelectableSourceRepository @Inject constructor(
         MultilingualSup.getPrimaryLanguage(context)
     )
 
-    private suspend fun checkSelectableSources() {
+    suspend fun checkSelectableSources() {
         if(!selectableDao.selectableResourcesIsInitialized(currentLanguage)) initSelectableSources(currentLanguage)
     }
 
@@ -62,8 +59,7 @@ class SelectableSourceRepository @Inject constructor(
         }
     }
 
-    suspend fun getAllSourcesForList() : PagingSource<Int, SourceSelectionModel>{
-        checkSelectableSources()
+    fun getAllSourcesForList() : PagingSource<Int, SourceSelectionModel>{
         return selectableDao.getAllSourcesForList(currentLanguage)
     }
 
