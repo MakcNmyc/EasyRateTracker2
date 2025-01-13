@@ -12,7 +12,5 @@ import dagger.hilt.components.SingletonComponent
 interface AppEntryPoint {
     fun createCbrfService(): CbrfService
     fun createCbrfLatestUntrackedElementExecutor(): CbrfLatestUntrackedElement
-//    fun createUntrackedSourceFactory(): UntrackedSourceFactory
-//    fun createUntrackedPositionSourceFactory(): UntrackedPositionSource.Factory
     fun createSelectableSourceRepository(): SelectableSourceRepository
 }
