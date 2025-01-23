@@ -9,7 +9,7 @@ import com.example.easyratetracker2.databinding.RatesElementBinding
 import com.example.easyratetracker2.ui.ContentMainFragmentDirections
 import javax.inject.Inject
 
-class TrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<RatesElementModel>) :
+open class TrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<RatesElementModel>) :
     StateDisplayAdapter<RatesElementModel>(itemCallback) {
 
     override val vhProducer: (parent: ViewGroup) -> ModelViewHolder<RatesElementModel, RatesElementBinding> =

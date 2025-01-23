@@ -9,7 +9,7 @@ import com.example.easyratetracker2.databinding.RatesElementBinding
 import com.example.easyratetracker2.ui.ContentMainFragmentDirections
 import javax.inject.Inject
 
-class UntrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<RatesElementModel>) :
+open class UntrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<RatesElementModel>) :
     StateDisplayAdapter<RatesElementModel>(itemCallback) {
 
     var navController: NavController? = null
