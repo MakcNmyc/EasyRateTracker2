@@ -10,7 +10,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.example.easyratetracker2.R
 import com.example.easyratetracker2.RecyclerViewMatchers.atPosition
 import com.example.easyratetracker2.adapters.TrackedRatesTestAdapter
-import com.example.easyratetracker2.adapters.util.LoadElementObserver
 import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.TrackedIdModel
 import com.example.easyratetracker2.data.repositories.TrackedRateRepository
@@ -54,16 +53,13 @@ class TrackedRateTest {
     val hiltInjectRule: HiltInjectRule = HiltInjectRule(hiltRule)
 
     @get:Rule(order = 3)
-    val beforeActivityCreatedRule: BeforeActivityCreatedRule =
-        BeforeActivityCreatedRule (this::beforeActivityCreated)
+    val beforeActivityCreatedRule = BeforeActivityCreatedRule (this::beforeActivityCreated)
 
     @get:Rule(order = 4)
-    val activityRule: ActivityScenarioRule<TestHiltActivity> = ActivityScenarioRule(
-        TestHiltActivity::class.java
-    )
+    val activityRule = ActivityScenarioRule(TestHiltActivity::class.java)
 
     @get:Rule(order = 5)
-    val hiltFragmentRule: HiltFragmentRule = HiltFragmentRule(
+    val hiltFragmentRule = HiltFragmentRule(
         { activityRule.scenario },
         TrackedRatesFragment::class.java
     )
@@ -72,26 +68,28 @@ class TrackedRateTest {
     val scenarioManagerRule = ScenarioManagerRule(activityRule)
 
     @get:Rule(order = 7)
-    val dataBindingIdlingRule: DataBindingIdlingRule = DataBindingIdlingRule(CoroutineScope(Dispatchers.Default), scenarioManagerRule.scenarioManager)
+    val dataBindingIdlingRule = DataBindingIdlingRule(CoroutineScope(Dispatchers.Default), scenarioManagerRule.scenarioManager)
 
     @get:Rule(order = 8)
-    val networkObserverIdlingRule: NetworkObserverIdlingRule =
+    val networkObserverIdlingRule =
         NetworkObserverIdlingRule(CoroutineScope(Dispatchers.Default), scenarioManagerRule.scenarioManager)
         { activity -> getNetworkObserver(hiltFragmentRule, activity) }
 
     @Inject lateinit var mockWebServer: MockWebServer
-    @BindValue
-    @Mock
-    lateinit var trackedRateRepository: TrackedRateRepository
-
     @get:Rule(order = 9)
     val mockWebServerRule: MockWebServerRule = MockWebServerRule { mockWebServer }
 
     @get:Rule(order = 10)
-    val recyclerViewIdlingRule: LoadElementInAdapterIdlingRule =
-        LoadElementInAdapterIdlingRule(CoroutineScope(Dispatchers.Default), scenarioManagerRule.scenarioManager)
-        { activity -> getLoadElement(hiltFragmentRule, activity) }
+    val stateDisplayIdlingRule = StateDisplayListIdlingRule(
+        CoroutineScope(Dispatchers.Default),
+        scenarioManagerRule.scenarioManager,
+        { activity -> getLoadElementObs(hiltFragmentRule, activity) },
+        { activity -> getNetworkObserver(hiltFragmentRule, activity) }
+    )
 
+    @BindValue
+    @Mock
+    lateinit var trackedRateRepository: TrackedRateRepository
 
     private fun beforeActivityCreated() {
 
@@ -102,11 +100,8 @@ class TrackedRateTest {
             TEST_ITEM_OUTER_ID
         )
 
-        Mockito
-            .`when`(
-                trackedRateRepository.
-                getTrackedIds(anyInt(), anyInt())
-            )
+        Mockito.`when`(
+                trackedRateRepository.getTrackedIds(anyInt(), anyInt()))
             .thenReturn(listOf(testDbItem))
 
         mockWebServer.enqueue(
@@ -116,7 +111,7 @@ class TrackedRateTest {
     @Test
     @Throws(IOException::class, InterruptedException::class)
     fun trackedElementCbrfTest(): Unit = runBlocking {
-        Espresso.onView(withId(R.id.tracked_rates_list))
+        Espresso.onView(withId(R.id.list))
             .check(ViewAssertions.matches(atPosition(0, ViewMatchers.withText(RESPONSE_HEADLINE))))
     }
 
@@ -145,14 +140,12 @@ class TrackedRateTest {
         fun getNetworkObserver(
             hiltFragmentRule: HiltFragmentRule,
             activity: TestHiltActivity
-        ): NetworkObserver =
-            (hiltFragmentRule.findFirstFragment(activity) as TrackedRatesFragment).viewModel.networkObserver
+        ) = (hiltFragmentRule.findFirstFragment(activity) as TrackedRatesFragment).viewModel.networkObserver
 
-        fun getLoadElement(
+        fun getLoadElementObs(
             hiltFragmentRule: HiltFragmentRule,
             activity: TestHiltActivity
-        ): LoadElementObserver =
-            ((hiltFragmentRule.findFirstFragment(activity) as TrackedRatesFragment).adapter as TrackedRatesTestAdapter).obs
+        ) = ((hiltFragmentRule.findFirstFragment(activity) as TrackedRatesFragment).adapter as TrackedRatesTestAdapter).obs
 
     }
 }

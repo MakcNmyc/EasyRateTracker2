@@ -2,25 +2,23 @@ package com.example.easyratetracker2.adapters.util
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.StateDisplayAdapter
-import java.util.function.Consumer
 
-class LoadElementObserver {
+class LoadViewHolderObserver {
+
     private val loadElements = ArrayList<RecyclerView.ViewHolder>()
-    private val subscribers = ArrayList<Runnable>()
+    private val onElementDisappearsSubs = ArrayList<() -> Unit> ()
 
     fun onElementAdd(vh: RecyclerView.ViewHolder) {
         val containsVh = loadElements.contains(vh)
         val isLoadingElement = isLoadVh(vh)
-        if (!containsVh && isLoadingElement) {
-            loadElements.add(vh)
-        } else if (containsVh && !isLoadingElement) {
-            clearLoadElement(vh)
+        if(isLoadingElement) {
+            if (containsVh) removeElement(vh) else loadElements.add(vh)
         }
     }
 
     fun onElementDelete(vh: RecyclerView.ViewHolder) {
         if (isLoadVh(vh)) {
-            clearLoadElement(vh)
+            removeElement(vh)
         }
     }
 
@@ -28,20 +26,18 @@ class LoadElementObserver {
         return vh.itemViewType == StateDisplayAdapter.LOADING
     }
 
-    private fun clearLoadElement(vh: RecyclerView.ViewHolder) {
+    private fun removeElement(vh: RecyclerView.ViewHolder) {
         loadElements.remove(vh)
-        if (notHaveLoadElement()) subsNotify()
+        if (!haveActiveLoadElements()) onElementDisappear()
     }
 
-    fun notHaveLoadElement(): Boolean {
-        return loadElements.isEmpty()
+    fun haveActiveLoadElements(): Boolean = loadElements.isNotEmpty()
+
+    private fun onElementDisappear() {
+        onElementDisappearsSubs.forEach { it() }
     }
 
-    private fun subsNotify() {
-        subscribers.forEach(Consumer { obj: Runnable -> obj.run() })
-    }
-
-    fun subscribe(action: Runnable) {
-        subscribers.add(action)
+    fun onElementDisappear(action: () -> Unit) {
+        onElementDisappearsSubs.add(action)
     }
 }

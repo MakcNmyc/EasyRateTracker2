@@ -36,9 +36,7 @@ class DataBindingIdlingResource : IdlingResource {
         } else {
             wasNotIdle = true
             // Check next frame.
-            activity.findViewById<View>(android.R.id.content).postDelayed({
-                isIdleNow
-            }, 16)
+            checkNextFrame(activity)
         }
         return idle
     }
