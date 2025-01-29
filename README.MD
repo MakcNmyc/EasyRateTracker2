@@ -18,4 +18,7 @@ I made this sample for learn, for improve my code and I'll be glad to see if it 
 
 The first version of the project was in Java and outdated, so I didn't open it.
 
+## Contacts
+Send me your suggestions to maxkikin@yandex.ru
+
 </div>
