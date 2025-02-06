@@ -24,7 +24,7 @@ class StateDisplayListIdlingResource(
 
     override fun isIdleNow(): Boolean {
 
-        val networkStatus = networkObsProvider().status
+        val networkStatus = networkObsProvider().status.value.currentStatus
         val isIdleNow: Boolean
         val loadElementInActivity: Boolean
         var loadElementInList = false

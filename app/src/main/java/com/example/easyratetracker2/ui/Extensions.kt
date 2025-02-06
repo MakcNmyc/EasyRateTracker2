@@ -1,12 +1,13 @@
 package com.example.easyratetracker2.ui
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,20 +48,23 @@ inline fun <T: ListElementModel<*>> Fragment.setUpStateDisplayList(
         this.setUpPagedList(dataProducer, pagedAdapter)
     }
 
-    observer.observeStatusData(this.viewLifecycleOwner){ statusData ->
-        binding.let {
-
-            when(statusData.newStatus){
-                Status.LOADING -> {
-                    if(statusData.previousStatus != Status.READY) it.loadingBar.visibility = View.VISIBLE
+    viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED){
+            binding.let {
+                observer.status.collectLatest { statusData ->
+                    when(statusData.currentStatus){
+                        Status.LOADING -> {
+                            if(statusData.previousStatus != Status.READY) it.loadingBar.visibility = View.VISIBLE
+                        }
+                        Status.ERROR -> {
+                            it.loadingBar.visibility = View.GONE
+                            it.list.visibility = View.GONE
+                            it.errorText.visibility = View.VISIBLE
+                            it.errorText.text = observer.errorsDescription
+                        }
+                        Status.READY -> it.loadingBar.visibility = View.GONE
+                    }
                 }
-                Status.ERROR -> {
-                    it.loadingBar.visibility = View.GONE
-                    it.list.visibility = View.GONE
-                    it.errorText.visibility = View.VISIBLE
-                    it.errorText.text = observer.errorsDescription
-                }
-                Status.READY -> it.loadingBar.visibility = View.GONE
             }
         }
     }

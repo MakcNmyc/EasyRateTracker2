@@ -1,13 +1,12 @@
 package com.example.easyratetracker2.adapters.util
 
 import android.content.Context
-import android.os.Looper
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.easyratetracker2.R
-import com.example.easyratetracker2.adapters.util.NetworkObserver.*
+import com.example.easyratetracker2.adapters.util.NetworkObserver.Status
+import com.example.easyratetracker2.adapters.util.NetworkObserver.StatusData
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class NetworkObserverImpl @Inject constructor(): NetworkObserver {
@@ -17,42 +16,27 @@ class NetworkObserverImpl @Inject constructor(): NetworkObserver {
     lateinit var context: Context
     private val errors: MutableList<Throwable> by lazy{ArrayList()}
 
-    private var _status = MutableLiveData(StatusData(Status.INIT, null))
-    override var status
-        get() = _status.value!!.newStatus
-        set(newStatus) {
-            synchronized(this){
-                _status.value!!.let { data ->
-                    if(data.newStatus == newStatus) return
-                    if (newStatus != Status.ERROR && errors.size > 0) errors.clear()
-                    if (Looper.myLooper() == Looper.getMainLooper()) {
-                        _status.value = StatusData(newStatus, data.newStatus)
-                    } else {
-                        _status.postValue(StatusData(newStatus, data.newStatus))
-                    }
-                }
-            }
+    private val _status = MutableStateFlow(StatusData(Status.INIT, null))
+    override val status = _status.asStateFlow()
+
+    override fun setStatus(status: Int) {
+        _status.value.let { statusData ->
+            if (status != Status.ERROR
+                && statusData.previousStatus == Status.ERROR
+                && errors.size > 0
+            ) errors.clear()
+            _status.value = statusData.createFrom(status)
         }
-
-    override fun observeStatusData(lifecycleOwner: LifecycleOwner, lifecycleObserver: Observer<StatusData>) {
-        _status.observe(lifecycleOwner, lifecycleObserver)
-    }
-
-    override fun observeStatusBeforeTriggered(endTrigger: (StatusData)->Boolean) {
-        _status.observeForever(object: Observer<StatusData>{
-            override fun onChanged(newValue: StatusData){
-                if (endTrigger(newValue)) _status.removeObserver(this)
-            }
-        })
     }
 
     override fun addError(e: Throwable) {
         errors.add(e)
-        status = Status.ERROR
+        setStatus(Status.ERROR)
     }
 
     override val errorsDescription: String
         get() = StringBuilder(context.getString(R.string.error_introductory)).also {
             errors.forEach { e -> it.append(e) }
         }.toString()
+
 }

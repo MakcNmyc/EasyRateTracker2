@@ -6,6 +6,7 @@ import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.sources.executors.PositionalSourceExecutor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.example.easyratetracker2.adapters.util.NetworkObserver.Status
 
 class PositionRateSource<T: Any>(
     private val networkObserver: NetworkObserver,
@@ -17,14 +18,14 @@ class PositionRateSource<T: Any>(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
 
-        networkObserver.status = NetworkObserver.Status.LOADING
+        networkObserver.setStatus(Status.LOADING)
 
         return withContext(Dispatchers.IO) {
             executor.execute(params.key ?: 0, params.loadSize)
         }.also {
             when (it) {
                 is LoadResult.Error -> networkObserver.addError(it.throwable)
-                else -> networkObserver.status = NetworkObserver.Status.READY
+                else -> networkObserver.setStatus(Status.READY)
             }
         }
     }

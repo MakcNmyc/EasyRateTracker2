@@ -3,6 +3,10 @@ package com.example.easyratetracker2.espresso
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.IdlingResource.ResourceCallback
 import com.example.easyratetracker2.adapters.util.NetworkObserver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class NetworkObserverResource:IdlingResource {
 
@@ -17,15 +21,21 @@ class NetworkObserverResource:IdlingResource {
     override fun isIdleNow(): Boolean {
         val networkObserverLocal = networkObserver ?: return true
 
-        val idle = isIdleNow(networkObserverLocal.status)
+        val idle = isIdleNow(networkObserverLocal.status.value.currentStatus)
         if (idle) {
             whenIdle()
         } else {
             notify = true
-            networkObserverLocal.observeStatusBeforeTriggered { value ->
-                val result = isIdleNow(value.newStatus)
-                if (result) whenIdle()
-                result
+
+            Job().let { j ->
+                CoroutineScope(j).launch {
+                    networkObserverLocal.status.collectLatest { value ->
+                        if (isIdleNow(value.currentStatus)){
+                            whenIdle()
+                            j.cancel()
+                        }
+                    }
+                }
             }
         }
         return idle

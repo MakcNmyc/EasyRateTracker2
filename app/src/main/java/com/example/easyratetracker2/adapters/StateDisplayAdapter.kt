@@ -1,10 +1,12 @@
 package com.example.easyratetracker2.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.adapters.util.NetworkObserver
@@ -12,6 +14,8 @@ import com.example.easyratetracker2.data.models.ListElementModel
 import com.example.easyratetracker2.data.models.ListErrorModel
 import com.example.easyratetracker2.databinding.ListErrorElementBinding
 import com.example.easyratetracker2.databinding.ListLoadElementBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>(
@@ -53,7 +57,7 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
     }
 
     override fun getItemViewType(position: Int): Int {
-        val status = observer.status
+        val status = observer.status.value.currentStatus
         if (status != NetworkObserver.Status.READY && position == itemCount - 1) {
             when (status) {
                 NetworkObserver.Status.INIT, NetworkObserver.Status.LOADING -> return LOADING
@@ -67,12 +71,15 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
         this.recyclerView = recyclerView
         if(::observer.isInitialized) return
         observer = newObserver
-        observer.observeStatusData(owner, this::onNetworkStatusChange)
-    }
 
-    private fun onNetworkStatusChange(statusData: NetworkObserver.StatusData) {
-        if (statusData.newStatus != statusData.previousStatus
-            && statusData.previousStatus == NetworkObserver.Status.LOADING) notifyItemChanged(max(itemCount - 1, 0))
+        owner.lifecycleScope.launch {
+            owner.repeatOnLifecycle(Lifecycle.State.RESUMED){
+                observer.status.collectLatest { statusData ->
+                    if (statusData.currentStatus != statusData.previousStatus
+                        && statusData.previousStatus == NetworkObserver.Status.LOADING) notifyItemChanged(max(itemCount - 1, 0))
+                }
+            }
+        }
     }
 
     private fun defaultLoadProducer(parent: ViewGroup): ModelViewHolder<V, ListLoadElementBinding> {

@@ -1,7 +1,6 @@
 package com.example.easyratetracker2.adapters.util
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
+import kotlinx.coroutines.flow.StateFlow
 
 interface NetworkObserver {
 
@@ -12,17 +11,18 @@ interface NetworkObserver {
         const val ERROR = 3
     }
 
-
     data class StatusData(
-        val newStatus: Int,
+        val currentStatus: Int,
         val previousStatus: Int?
-    )
+    ){
+        fun createFrom(newStatus: Int) =
+            if(currentStatus == newStatus) this else StatusData(newStatus, currentStatus)
+    }
 
     val errorsDescription: String
-    var status: Int
+    val status: StateFlow<StatusData>
 
-    fun observeStatusData(lifecycleOwner: LifecycleOwner, lifecycleObserver: Observer<StatusData>)
-    fun observeStatusBeforeTriggered(endTrigger: (StatusData)->Boolean)
+    fun setStatus(status: Int)
     fun addError(e: Throwable)
 
 }
