@@ -12,12 +12,17 @@ interface NetworkObserver {
         const val ERROR = 3
     }
 
+
+    data class StatusData(
+        val newStatus: Int,
+        val previousStatus: Int?
+    )
+
     val errorsDescription: String
-    var previousStatus: Int?
     var status: Int
 
-    fun observeStatus(lifecycleOwner: LifecycleOwner, lifecycleObserver: Observer<Int>)
-    fun observeStatusOnce(endTrigger: (Int)->Boolean)
+    fun observeStatusData(lifecycleOwner: LifecycleOwner, lifecycleObserver: Observer<StatusData>)
+    fun observeStatusBeforeTriggered(endTrigger: (StatusData)->Boolean)
     fun addError(e: Throwable)
 
 }

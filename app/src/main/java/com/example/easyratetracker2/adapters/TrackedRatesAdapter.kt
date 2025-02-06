@@ -10,26 +10,24 @@ import com.example.easyratetracker2.ui.ContentMainFragmentDirections
 import javax.inject.Inject
 
 open class TrackedRatesAdapter @Inject constructor(itemCallback: ItemCallback<RatesElementModel>) :
-    StateDisplayAdapter<RatesElementModel>(itemCallback) {
-
-    override val vhProducer: (parent: ViewGroup) -> ModelViewHolder<RatesElementModel, RatesElementBinding> =
-        { parent ->
-            ModelViewHolder(
-                parent,
-                RatesElementBinding::inflate,
-                this::setUpData
-            )
-        }
-
-    private fun setUpData(
-        model: RatesElementModel,
-        binding: RatesElementBinding
+    StateDisplayAdapter<RatesElementModel, RatesElementBinding>(
+        itemCallback,
+        RatesElementBinding::inflate,
+        this::setUpData
     ) {
-        binding.model = model
-        binding.root.setOnClickListener{ v ->
-            Navigation.findNavController(v).navigate(
-                ContentMainFragmentDirections.actionContentMainToRateDetails(OuterDetailsModel(model))
-            )
+
+
+    companion object{
+        private fun setUpData(
+            model: RatesElementModel,
+            binding: RatesElementBinding
+        ) {
+            binding.model = model
+            binding.root.setOnClickListener{ v ->
+                Navigation.findNavController(v).navigate(
+                    ContentMainFragmentDirections.actionContentMainToRateDetails(OuterDetailsModel(model))
+                )
+            }
         }
     }
 

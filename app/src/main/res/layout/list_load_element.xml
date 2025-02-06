@@ -6,9 +6,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/state_display_list"
-            layout="@layout/rates_element" />
+        <FrameLayout
+            android:id="@+id/element_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
 
         <ProgressBar
             android:id="@+id/progressBar"

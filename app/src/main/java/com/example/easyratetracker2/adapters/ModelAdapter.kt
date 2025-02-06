@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewTreeLifecycleOwner
-import androidx.paging.PagedListAdapter
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.util.ItemCallback
@@ -38,16 +37,15 @@ abstract class ModelAdapter<V : ListElementModel<*>>(
     }.root) {
         constructor(
             parent: ViewGroup,
-            inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T
-        ) : this(parent, inflateBinding(LayoutInflater.from(parent.context), parent, false))
+            bindingInflater: (LayoutInflater, ViewGroup, Boolean) -> T
+        ) : this(parent, parent.inflateFrom(bindingInflater))
     }
 
     open class ModelViewHolder<in V : ListElementModel<*>, T : ViewDataBinding>(
         parent: ViewGroup,
-        inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T,
+        bindingInflater: (LayoutInflater, ViewGroup, Boolean) -> T,
         private inline val contentSetter: (model: V, binding: T) -> Unit
-    ) : BindingViewHolder<T>(parent, inflateBinding) {
-
+    ) : BindingViewHolder<T>(parent, bindingInflater) {
         fun setModel(model: V) {
             contentSetter(model, binding)
             binding.executePendingBindings()
@@ -56,10 +54,16 @@ abstract class ModelAdapter<V : ListElementModel<*>>(
 
     class ModelProducerVH<in V : ListElementModel<*>, T : ViewDataBinding> (
         parent: ViewGroup,
-        inflateBinding: (LayoutInflater, ViewGroup, Boolean) -> T,
+        bindingInflater: (LayoutInflater, ViewGroup, Boolean) -> T,
         contentSetter: (model: V, binding: T) -> Unit,
         private inline val modelProducer: (() -> V)
-    ) : ModelViewHolder<V, T>(parent, inflateBinding, contentSetter) {
+    ) : ModelViewHolder<V, T>(parent, bindingInflater, contentSetter) {
         fun setModel() = setModel(modelProducer())
     }
+
+    companion object{
+        internal fun <T: ViewDataBinding> ViewGroup.inflateFrom(bindingInflater: (LayoutInflater, ViewGroup, Boolean) -> T) =
+            bindingInflater(LayoutInflater.from(this.context), this, false)
+    }
+
 }

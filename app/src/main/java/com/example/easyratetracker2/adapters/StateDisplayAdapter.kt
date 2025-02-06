@@ -1,6 +1,9 @@
 package com.example.easyratetracker2.adapters
 
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.example.easyratetracker2.adapters.util.ItemCallback
@@ -9,17 +12,36 @@ import com.example.easyratetracker2.data.models.ListElementModel
 import com.example.easyratetracker2.data.models.ListErrorModel
 import com.example.easyratetracker2.databinding.ListErrorElementBinding
 import com.example.easyratetracker2.databinding.ListLoadElementBinding
+import kotlin.math.max
 
-abstract class StateDisplayAdapter<V : ListElementModel<*>>(
+abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>(
     itemCallback: ItemCallback<V>,
+    val bindingInflater: (LayoutInflater, ViewGroup, Boolean) -> T,
+    private inline val contentSetter: (model: V, binding: T) -> Unit,
     val errorProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultErrorProducer,
-    val loadProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = {p,_ -> defaultLoadProducer(p) }
+    loadProducer: ((parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder)? = null
 ) : ModelAdapter<V>(itemCallback) {
+
+    interface ViewHolderHandler<V : ListElementModel<*>, T : ViewDataBinding>{
+        fun bindingInflater(a: LayoutInflater, b: ViewGroup, c: Boolean): T
+        fun contentSetter(model: V, binding: T)
+    }
+
+    constructor(itemCallback: ItemCallback<V>, handler: ViewHolderHandler<V, T>) : this(itemCallback, handler::bindingInflater, handler::contentSetter)
 
     private lateinit var observer: NetworkObserver
     private var recyclerView: RecyclerView? = null
 
-    var hasDecorationItem = true
+    override val vhProducer: (parent: ViewGroup) -> ModelViewHolder<V, T> =
+        { parent ->
+            ModelViewHolder(
+                parent,
+                bindingInflater,
+                contentSetter
+            )
+        }
+
+    val loadProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = loadProducer ?: {p,_ -> this.defaultLoadProducer(p) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
@@ -31,8 +53,9 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (hasDecorationItems() && position == itemCount - 1) {
-            when (observer.status) {
+        val status = observer.status
+        if (status != NetworkObserver.Status.READY && position == itemCount - 1) {
+            when (status) {
                 NetworkObserver.Status.INIT, NetworkObserver.Status.LOADING -> return LOADING
                 NetworkObserver.Status.ERROR -> return ERROR
             }
@@ -44,37 +67,23 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
         this.recyclerView = recyclerView
         if(::observer.isInitialized) return
         observer = newObserver
-        observer.observeStatus(owner, this::onNetworkStatusChange)
+        observer.observeStatusData(owner, this::onNetworkStatusChange)
     }
 
-    private fun onNetworkStatusChange(newStatus: Int) {
-        observer.previousStatus?.let {
-            adapterStatusNotify(newStatus, it)
-        }
+    private fun onNetworkStatusChange(statusData: NetworkObserver.StatusData) {
+        if (statusData.newStatus != statusData.previousStatus
+            && statusData.previousStatus == NetworkObserver.Status.LOADING) notifyItemChanged(max(itemCount - 1, 0))
     }
 
-    private fun adapterStatusNotify(newStatus: Int, previousStatus: Int) {
-        hasDecorationItem = hasDecorationItems(newStatus)
-        val hasDecorationItems = hasDecorationItem
-        val hadDecorationItems = hasDecorationItems(previousStatus)
-        val itemCount: Int = itemCount
-        if (hadDecorationItems != hasDecorationItems) {
-            if (hadDecorationItems) {
-                recyclerView?.post{notifyItemRemoved(itemCount)}
-            } else {
-                recyclerView?.post{notifyItemInserted(itemCount)}
-            }
-        } else if (hasDecorationItems && newStatus != previousStatus) {
-            notifyItemChanged(if (itemCount == 0) 0 else itemCount - 1)
-        }
-    }
-
-    private fun hasDecorationItems(): Boolean {
-        return hasDecorationItems(observer.status)
-    }
-
-    private fun hasDecorationItems(networkStatus: Int): Boolean {
-        return networkStatus != NetworkObserver.Status.READY
+    private fun defaultLoadProducer(parent: ViewGroup): ModelViewHolder<V, ListLoadElementBinding> {
+        return ModelViewHolder(
+            parent,
+            ListLoadElementBinding::inflate,
+        ) { model, binding -> binding.elementContainer.addView(
+            parent.inflateFrom(bindingInflater).also {
+                contentSetter(model, it)
+            }.root
+        ) }
     }
 
     companion object {
@@ -91,8 +100,5 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>>(
             )
         }
 
-        private fun defaultLoadProducer(parent: ViewGroup): BindingViewHolder<ListLoadElementBinding> {
-            return BindingViewHolder(parent, ListLoadElementBinding::inflate)
-        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.easyratetracker2.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.easyratetracker2.adapters.StateDisplayAdapter
 import com.example.easyratetracker2.adapters.util.NetworkObserver
+import com.example.easyratetracker2.adapters.util.NetworkObserver.Status
 import com.example.easyratetracker2.data.models.ListElementModel
 import com.example.easyratetracker2.databinding.StateDisplayListBinding
 import kotlinx.coroutines.flow.Flow
@@ -30,14 +32,14 @@ inline fun <T : ViewDataBinding> Fragment.createBinding(
 inline fun <T: ListElementModel<*>> Fragment.setUpStateDisplayList(
     binding: StateDisplayListBinding,
     dataProducer: Flow<Flow<PagingData<T>>?>,
-    pagedAdapter: StateDisplayAdapter<T>,
+    pagedAdapter: StateDisplayAdapter<T, *>,
     observer: NetworkObserver,
     swipeRefresh: SwipeRefreshLayout,
     crossinline pagedListRefresher: () -> Unit,
 ) {
     setUpBaseList(binding.list, dataProducer, pagedAdapter)
     this.view
-    pagedAdapter.setUpObserver(observer, this, binding.list)
+    pagedAdapter.setUpObserver(observer, viewLifecycleOwner, binding.list)
     swipeRefresh.setOnRefreshListener {
         //skip widget animation
         swipeRefresh.isRefreshing = false
@@ -45,16 +47,20 @@ inline fun <T: ListElementModel<*>> Fragment.setUpStateDisplayList(
         this.setUpPagedList(dataProducer, pagedAdapter)
     }
 
-    observer.observeStatus(this.viewLifecycleOwner){ status ->
+    observer.observeStatusData(this.viewLifecycleOwner){ statusData ->
         binding.let {
-            when(status){
-                NetworkObserver.Status.ERROR -> {
+
+            when(statusData.newStatus){
+                Status.LOADING -> {
+                    if(statusData.previousStatus != Status.READY) it.loadingBar.visibility = View.VISIBLE
+                }
+                Status.ERROR -> {
                     it.loadingBar.visibility = View.GONE
                     it.list.visibility = View.GONE
                     it.errorText.visibility = View.VISIBLE
                     it.errorText.text = observer.errorsDescription
                 }
-                NetworkObserver.Status.READY -> it.loadingBar.visibility = View.GONE
+                Status.READY -> it.loadingBar.visibility = View.GONE
             }
         }
     }

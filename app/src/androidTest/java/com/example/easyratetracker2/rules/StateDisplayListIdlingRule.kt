@@ -30,7 +30,6 @@ class StateDisplayListIdlingRule(
             loadVhObs = loadVhProvider(activity)
             networkObs = networkObsProvider(activity)
             _activity = WeakReference(activity)
-            Log.e("qwe", "_activity is $activity")
         }
     }
 

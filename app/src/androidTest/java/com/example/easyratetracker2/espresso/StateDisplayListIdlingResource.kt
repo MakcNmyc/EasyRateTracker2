@@ -35,7 +35,7 @@ class StateDisplayListIdlingResource(
             NetworkObserver.Status.ERROR -> isIdleNow = true
             else -> {
                 loadElementInList = loadVhObsProvider().haveActiveLoadElements()
-                loadElementInActivity = !loadElementInList && activity?.findViewById<View>(R.id.loadingBar)?.visibility == View.VISIBLE
+                loadElementInActivity = !loadElementInList && activity?.findViewById<View>(R.id.loading_bar)?.visibility == View.VISIBLE
                 isIdleNow = !(loadElementInList || loadElementInActivity)
             }
         }

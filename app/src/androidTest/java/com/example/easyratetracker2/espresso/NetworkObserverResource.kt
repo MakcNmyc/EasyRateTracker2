@@ -22,8 +22,8 @@ class NetworkObserverResource:IdlingResource {
             whenIdle()
         } else {
             notify = true
-            networkObserverLocal.observeStatusOnce { value ->
-                val result = isIdleNow(value)
+            networkObserverLocal.observeStatusBeforeTriggered { value ->
+                val result = isIdleNow(value.newStatus)
                 if (result) whenIdle()
                 result
             }

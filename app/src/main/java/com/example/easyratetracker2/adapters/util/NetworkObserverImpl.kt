@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.easyratetracker2.R
-import com.example.easyratetracker2.adapters.util.NetworkObserver.Status
+import com.example.easyratetracker2.adapters.util.NetworkObserver.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -16,33 +16,31 @@ class NetworkObserverImpl @Inject constructor(): NetworkObserver {
     @Inject
     lateinit var context: Context
     private val errors: MutableList<Throwable> by lazy{ArrayList()}
-    override var previousStatus: Int? = null
 
-    //TODO: refactor to state flow
-    private var _status: MutableLiveData<Int> = MutableLiveData(Status.INIT)
+    private var _status = MutableLiveData(StatusData(Status.INIT, null))
     override var status
-        get() = _status.value!!
+        get() = _status.value!!.newStatus
         set(newStatus) {
             synchronized(this){
-                _status.value.let { previousStatus ->
-                    if(previousStatus == newStatus) return
+                _status.value!!.let { data ->
+                    if(data.newStatus == newStatus) return
                     if (newStatus != Status.ERROR && errors.size > 0) errors.clear()
                     if (Looper.myLooper() == Looper.getMainLooper()) {
-                        _status.value = newStatus
+                        _status.value = StatusData(newStatus, data.newStatus)
                     } else {
-                        _status.postValue(newStatus)
+                        _status.postValue(StatusData(newStatus, data.newStatus))
                     }
                 }
             }
         }
 
-    override fun observeStatus(lifecycleOwner: LifecycleOwner, lifecycleObserver: Observer<Int>) {
+    override fun observeStatusData(lifecycleOwner: LifecycleOwner, lifecycleObserver: Observer<StatusData>) {
         _status.observe(lifecycleOwner, lifecycleObserver)
     }
 
-    override fun observeStatusOnce(endTrigger: (Int)->Boolean) {
-        _status.observeForever(object: Observer<Int>{
-            override fun onChanged(newValue: Int){
+    override fun observeStatusBeforeTriggered(endTrigger: (StatusData)->Boolean) {
+        _status.observeForever(object: Observer<StatusData>{
+            override fun onChanged(newValue: StatusData){
                 if (endTrigger(newValue)) _status.removeObserver(this)
             }
         })
