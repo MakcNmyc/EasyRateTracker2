@@ -14,29 +14,21 @@ class NetworkObserverImpl @Inject constructor(): NetworkObserver {
     @ApplicationContext
     @Inject
     lateinit var context: Context
-    private val errors: MutableList<Throwable> by lazy{ArrayList()}
 
     private val _status = MutableStateFlow(StatusData(Status.INIT, null))
     override val status = _status.asStateFlow()
 
     override fun setStatus(status: Int) {
-        _status.value.let { statusData ->
-            if (status != Status.ERROR
-                && statusData.previousStatus == Status.ERROR
-                && errors.size > 0
-            ) errors.clear()
-            _status.value = statusData.createFrom(status)
-        }
+        _status.value = _status.value.createFrom(status)
     }
 
     override fun addError(e: Throwable) {
-        errors.add(e)
-        setStatus(Status.ERROR)
+        _status.value = _status.value.createAndAddError(e)
     }
 
     override val errorsDescription: String
         get() = StringBuilder(context.getString(R.string.error_introductory)).also {
-            errors.forEach { e -> it.append(e) }
+            it.append(_status.value.error)
         }.toString()
 
 }

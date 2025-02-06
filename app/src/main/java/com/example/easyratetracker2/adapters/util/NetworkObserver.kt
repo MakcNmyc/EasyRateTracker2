@@ -13,10 +13,18 @@ interface NetworkObserver {
 
     data class StatusData(
         val currentStatus: Int,
-        val previousStatus: Int?
+        val previousStatus: Int?,
     ){
+        var error: Throwable? = null
+
         fun createFrom(newStatus: Int) =
             if(currentStatus == newStatus) this else StatusData(newStatus, currentStatus)
+
+        fun createAndAddError(e: Throwable) =
+            (if (currentStatus != Status.ERROR) StatusData(Status.ERROR, currentStatus)
+            else copy()).also {
+                it.error = e
+            }
     }
 
     val errorsDescription: String
