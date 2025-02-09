@@ -1,5 +1,6 @@
 package com.example.easyratetracker2.ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,13 @@ import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.adapters.util.NetworkObserver.Status
 import com.example.easyratetracker2.data.models.ListElementModel
 import com.example.easyratetracker2.databinding.StateDisplayListBinding
+import com.example.easyratetracker2.di.AppEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
+fun Context.createAppEntryPoint() = EntryPointAccessors.fromApplication(this, AppEntryPoint::class.java)
 
 inline fun <T : ViewDataBinding> Fragment.createBinding(
     inflater: LayoutInflater,

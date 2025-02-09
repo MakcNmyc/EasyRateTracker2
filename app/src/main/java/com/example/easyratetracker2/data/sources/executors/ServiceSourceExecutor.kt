@@ -7,9 +7,7 @@ import javax.inject.Inject
 
 abstract class ServiceSourceExecutor{
 
-    @ApplicationContext
-    @Inject
-    lateinit var context: Context
+    @ApplicationContext @Inject lateinit var context: Context
     internal val supportedServices: MutableMap<Int, Any> = ArrayMap()
 
     @Suppress("UNCHECKED_CAST")

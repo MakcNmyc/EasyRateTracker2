@@ -15,9 +15,8 @@ class UntrackedSourceFactory @Inject constructor(private val networkObserver: Ne
                                                  @ApplicationContext private var context: Context){
 
     @Suppress("UNCHECKED_CAST")
-    fun <K: Any> create(receivingMethod: Int): PagingSource<K, RatesElementModel> {
-
-        return when (receivingMethod) {
+    fun <K : Any> create(receivingMethod: Int): PagingSource<K, RatesElementModel> =
+        when (receivingMethod) {
             ServiceSourceExecutor.CBRF_SERVICE -> PositionRateSource(
                 networkObserver,
                 fromApplication(
@@ -28,7 +27,7 @@ class UntrackedSourceFactory @Inject constructor(private val networkObserver: Ne
 
             else -> throw IndexOutOfBoundsException()
         } as PagingSource<K, RatesElementModel>
-    }
+
 
     fun getInitialKey(receivingMethod: Int) : Any =
         when (receivingMethod) {

@@ -1,5 +1,6 @@
 package com.example.easyratetracker2.ui.lists
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,19 @@ import androidx.navigation.Navigation
 import com.example.easyratetracker2.adapters.UntrackedRatesAdapter
 import com.example.easyratetracker2.databinding.UntrackedRatesBinding
 import com.example.easyratetracker2.ui.MainActivity
+import com.example.easyratetracker2.ui.createAppEntryPoint
 import com.example.easyratetracker2.ui.createBinding
 import com.example.easyratetracker2.ui.setUpStateDisplayList
 import com.example.easyratetracker2.viewmodels.lists.UntrackedRatesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class UntrackedRatesFragment : Fragment() {
 
-    @Inject lateinit var adapter: UntrackedRatesAdapter
+    @Inject @ApplicationContext lateinit var appContext: Context
+    var adapter: UntrackedRatesAdapter? = null
     val viewModel: UntrackedRatesViewModel by viewModels()
 
     override fun onCreateView(
@@ -31,15 +35,17 @@ class UntrackedRatesFragment : Fragment() {
 
         viewModel.init()
 
+        adapter = appContext.createAppEntryPoint().createUntrackedRatesAdapter()
+
         setUpStateDisplayList(
             binding.stateDisplayList,
             viewModel.untrackedRateList,
-            adapter,
+            adapter!!,
             viewModel.networkObserver,
             binding.stateDisplayList.swipeRefresh
         ) { viewModel.refreshRateList() }
 
-        adapter.navController = MainActivity.getNavController(this)
+        adapter!!.navController = MainActivity.getNavController(this)
 
         binding.viewModel = viewModel
 
@@ -50,5 +56,11 @@ class UntrackedRatesFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adapter = null
     }
 }

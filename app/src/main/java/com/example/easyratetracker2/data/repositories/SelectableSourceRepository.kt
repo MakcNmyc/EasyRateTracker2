@@ -15,7 +15,7 @@ import com.example.easyratetracker2.di.AppEntryPoint
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
-import dagger.hilt.android.EntryPointAccessors.fromApplication
+import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -75,7 +75,7 @@ class SelectableSourceRepository @Inject constructor(
 
         override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
             try {
-                fromApplication(applicationContext, AppEntryPoint::class.java)
+                EntryPointAccessors.fromApplication(applicationContext, AppEntryPoint::class.java)
                     .createSelectableSourceRepository()
                     .saveToDb(
                         StorageRequest(
