@@ -34,7 +34,6 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
     constructor(itemCallback: ItemCallback<V>, handler: ViewHolderHandler<V, T>) : this(itemCallback, handler::bindingInflater, handler::contentSetter)
 
     private var observer: NetworkObserver? = null
-    private var recyclerView: RecyclerView? = null
 
     override val vhProducer: (parent: ViewGroup) -> ModelViewHolder<V, T> =
         { parent ->
@@ -67,8 +66,7 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
         return ITEM
     }
 
-    fun setUpObserver(newObserver: NetworkObserver, owner: LifecycleOwner, recyclerView: RecyclerView){
-        this.recyclerView = recyclerView
+    fun setUpObserver(newObserver: NetworkObserver, owner: LifecycleOwner){
         if(observer != null) return
         observer = newObserver
 

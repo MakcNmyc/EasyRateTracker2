@@ -45,7 +45,7 @@ inline fun <T: ListElementModel<*>> Fragment.setUpStateDisplayList(
 ) {
     setUpBaseList(binding.list, dataProducer, pagedAdapter)
     this.view
-    pagedAdapter.setUpObserver(observer, viewLifecycleOwner, binding.list)
+    pagedAdapter.setUpObserver(observer, viewLifecycleOwner)
     swipeRefresh.setOnRefreshListener {
         //skip widget animation
         swipeRefresh.isRefreshing = false
