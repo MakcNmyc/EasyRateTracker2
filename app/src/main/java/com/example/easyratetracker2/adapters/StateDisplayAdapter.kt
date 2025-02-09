@@ -33,7 +33,7 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
 
     constructor(itemCallback: ItemCallback<V>, handler: ViewHolderHandler<V, T>) : this(itemCallback, handler::bindingInflater, handler::contentSetter)
 
-    private lateinit var observer: NetworkObserver
+    private var observer: NetworkObserver? = null
     private var recyclerView: RecyclerView? = null
 
     override val vhProducer: (parent: ViewGroup) -> ModelViewHolder<V, T> =
@@ -50,14 +50,14 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             ITEM -> super.onCreateViewHolder(parent, viewType)
-            ERROR -> errorProducer(parent, observer)
-            LOADING -> loadProducer(parent, observer)
+            ERROR -> errorProducer(parent, observer!!)
+            LOADING -> loadProducer(parent, observer!!)
             else -> throw IndexOutOfBoundsException()
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        val status = observer.status.value.currentStatus
+        val status = observer?.status?.value?.currentStatus
         if (status != NetworkObserver.Status.READY && position == itemCount - 1) {
             when (status) {
                 NetworkObserver.Status.INIT, NetworkObserver.Status.LOADING -> return LOADING
@@ -69,12 +69,12 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
 
     fun setUpObserver(newObserver: NetworkObserver, owner: LifecycleOwner, recyclerView: RecyclerView){
         this.recyclerView = recyclerView
-        if(::observer.isInitialized) return
+        if(observer != null) return
         observer = newObserver
 
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(Lifecycle.State.RESUMED){
-                observer.status.collectLatest { statusData ->
+                observer?.status?.collectLatest { statusData ->
                     if (statusData.currentStatus != statusData.previousStatus
                         && statusData.previousStatus == NetworkObserver.Status.LOADING) notifyItemChanged(max(itemCount - 1, 0))
                 }
