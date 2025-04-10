@@ -10,7 +10,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.example.easyratetracker2.R
 import com.example.easyratetracker2.RecyclerViewMatchers.atPosition
 import com.example.easyratetracker2.adapters.TrackedRatesTestAdapter
-import com.example.easyratetracker2.adapters.util.NetworkObserver
 import com.example.easyratetracker2.data.models.TrackedIdModel
 import com.example.easyratetracker2.data.repositories.TrackedRateRepository
 import com.example.easyratetracker2.data.sources.executors.ServiceSourceExecutor
@@ -117,7 +116,7 @@ class TrackedRateTest {
 
 
     companion object {
-        const val CbrfTrackedResponseFilename = "cbrf_tracked_test_response.xml"
+        private const val CBRF_TRACKED_RESPONSE_FILENAME = "cbrf_tracked_test_response.xml"
         private const val TAG = "MainActivityTest"
         const val RESPONSE_HEADLINE = "Test valute name"
         const val TEST_ITEM_OUTER_ID = "9999"
@@ -127,7 +126,7 @@ class TrackedRateTest {
                 BufferedReader(
                     InputStreamReader(
                         InstrumentationRegistry.getInstrumentation().context.assets.open(
-                            CbrfTrackedResponseFilename
+                            CBRF_TRACKED_RESPONSE_FILENAME
                         ),
                         StandardCharsets.UTF_8))
                     .lines()

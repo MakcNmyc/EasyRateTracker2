@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 open class UntrackedRatesAdapter(
     itemCallback: ItemCallback<RatesElementModel>,
-    val viewHolderHandler: UntrackedViewHolderHandler
+    private val viewHolderHandler: UntrackedViewHolderHandler
 ) : StateDisplayAdapter<RatesElementModel, RatesElementBinding>(itemCallback, viewHolderHandler) {
 
      @Inject constructor(itemCallback: ItemCallback<RatesElementModel>) : this(itemCallback, UntrackedViewHolderHandler())

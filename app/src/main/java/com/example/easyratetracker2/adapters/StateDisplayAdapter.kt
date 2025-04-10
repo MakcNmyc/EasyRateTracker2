@@ -20,7 +20,7 @@ import kotlin.math.max
 
 abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>(
     itemCallback: ItemCallback<V>,
-    val bindingInflater: (LayoutInflater, ViewGroup, Boolean) -> T,
+    private val bindingInflater: (LayoutInflater, ViewGroup, Boolean) -> T,
     private inline val contentSetter: (model: V, binding: T) -> Unit,
     val errorProducer: (parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder = this::defaultErrorProducer,
     loadProducer: ((parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder)? = null

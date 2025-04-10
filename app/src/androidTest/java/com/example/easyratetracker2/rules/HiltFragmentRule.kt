@@ -43,7 +43,7 @@ class HiltFragmentRule(
         return fragmentTag
     }
 
-    fun findFragment(activity: TestHiltActivity, tag: String): Fragment? {
+    private fun findFragment(activity: TestHiltActivity, tag: String): Fragment? {
         return activity.supportFragmentManager.findFragmentByTag(tag)
     }
 

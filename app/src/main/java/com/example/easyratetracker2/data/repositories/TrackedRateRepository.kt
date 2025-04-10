@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class TrackedRateRepository @Inject constructor(var trackedDao: TrackedRateDao) :
+open class TrackedRateRepository @Inject constructor(private var trackedDao: TrackedRateDao) :
     RoomRepository<TrackedRate>(trackedDao) {
 
     fun getTrackedDetailsModel(id: String): LiveData<StoredDetailsModel> {

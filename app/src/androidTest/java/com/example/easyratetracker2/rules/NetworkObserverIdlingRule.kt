@@ -35,7 +35,7 @@ class NetworkObserverIdlingRule(
         }
     }
 
-    fun startObserve(networkObserver: NetworkObserver?) {
+    private fun startObserve(networkObserver: NetworkObserver?) {
         networkObserverResource.startObserve(networkObserver)
     }
 }

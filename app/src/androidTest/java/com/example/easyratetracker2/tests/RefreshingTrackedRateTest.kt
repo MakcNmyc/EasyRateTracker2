@@ -88,7 +88,7 @@ class RefreshingTrackedRateTest {
     )
 
 
-    fun beforeActivityCreated() {
+    private fun beforeActivityCreated() {
         mockWebServer.enqueue(
             MockResponse().setBody(TrackedRateTest.cbrfTestResponse)
         )

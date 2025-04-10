@@ -7,7 +7,6 @@ import com.example.easyratetracker2.di.AppEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
@@ -33,7 +32,7 @@ class TrackedRatesExecutor @Inject constructor() : PositionalSourceExecutor<Rate
     @OptIn(FlowPreview::class)
     private suspend fun fetchData(startPosition: Int, loadSize: Int) : List<RatesElementModel>{
         return repository.getTrackedIds(startPosition, loadSize).let { ids ->
-            if (ids.isEmpty()) return emptyList<RatesElementModel>() else
+            if (ids.isEmpty()) return emptyList() else
                 ids.groupBy { it.sourceId }
                     .map { getDataFromService(it.key, it.value) }
                     .asFlow()

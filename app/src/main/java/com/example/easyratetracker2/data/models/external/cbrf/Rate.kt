@@ -9,7 +9,7 @@ import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 
 @Root(name = "Valute", strict = false)
-data class Rate constructor(
+data class Rate(
 
     @field:Attribute(name = "ID")
     @param:Attribute(name = "ID", required = true)

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class ScenarioManager<T: Activity> {
 
-    lateinit var scenario: ActivityScenario<T>
+    private lateinit var scenario: ActivityScenario<T>
 
     private val _activityObserver: MutableStateFlow<T?> = MutableStateFlow(null)
     val activityObserver: StateFlow<T?> = _activityObserver.asStateFlow()
@@ -20,7 +20,7 @@ class ScenarioManager<T: Activity> {
         notifySubs(scenario)
     }
 
-    fun notifySubs(scenario: ActivityScenario<T>) {
+    private fun notifySubs(scenario: ActivityScenario<T>) {
         scenario.onActivity{ newActivity ->
             _activityObserver.value = newActivity
         }

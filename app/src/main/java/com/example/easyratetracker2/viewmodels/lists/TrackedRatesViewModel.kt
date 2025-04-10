@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrackedRatesViewModel @Inject constructor(val networkObserver: NetworkObserver,
-                                                val executor: TrackedRatesExecutor,
+                                                private val executor: TrackedRatesExecutor,
                                                 val database: AppDatabase) : ViewModel() {
 
     private val _trackedRateList = MutableStateFlow(createRateList())
@@ -42,7 +42,7 @@ class TrackedRatesViewModel @Inject constructor(val networkObserver: NetworkObse
         _trackedRateList.value = createRateList()
     }
 
-    fun createRateList() =
+    private fun createRateList() =
         viewModelScope.createPagingDataFlow(
             PositionRateSource.INITIAL_KEY
         ) { PositionRateSource(networkObserver, executor) }

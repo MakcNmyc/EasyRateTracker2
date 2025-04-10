@@ -10,7 +10,7 @@ import org.junit.Test
 //default values test
 class TrackedRateTest {
 
-    var obj: TrackedRate = TrackedRate()
+    private var obj: TrackedRate = TrackedRate()
 
     @Test
     fun test_default_id() = runBlocking {

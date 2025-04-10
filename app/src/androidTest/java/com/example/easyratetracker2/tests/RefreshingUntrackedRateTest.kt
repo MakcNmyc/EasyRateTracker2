@@ -36,8 +36,8 @@ class RefreshingUntrackedRateTest {
 
     @Inject
     lateinit var mockWebServer: MockWebServer
-    lateinit var pageListBefore: Flow<Flow<PagingData<RatesElementModel>>?>
-    lateinit var pageListAfter: Flow<Flow<PagingData<RatesElementModel>>?>
+    private lateinit var pageListBefore: Flow<Flow<PagingData<RatesElementModel>>?>
+    private lateinit var pageListAfter: Flow<Flow<PagingData<RatesElementModel>>?>
 
     @get:Rule(order = 0)
     val mockitoRule: MockitoRule = MockitoJUnit.rule()

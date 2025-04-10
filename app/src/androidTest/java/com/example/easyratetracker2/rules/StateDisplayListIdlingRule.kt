@@ -1,6 +1,5 @@
 package com.example.easyratetracker2.rules
 
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.espresso.IdlingRegistry
 import com.example.easyratetracker2.adapters.util.LoadViewHolderObserver

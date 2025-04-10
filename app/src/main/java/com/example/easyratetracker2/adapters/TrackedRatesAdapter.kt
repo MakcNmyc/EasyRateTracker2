@@ -1,6 +1,5 @@
 package com.example.easyratetracker2.adapters
 
-import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.example.easyratetracker2.adapters.util.ItemCallback
 import com.example.easyratetracker2.data.models.OuterDetailsModel

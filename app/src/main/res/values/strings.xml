@@ -1,10 +1,8 @@
 <resources>
 
     <string name="app_name">Easy Rate Tracker</string>
-    <string name="action_settings">Settings</string>
 
     <string name="error_introductory">Error: </string>
-    <string name="no_internet_error">There is no internet on the device. Check your connection</string>
 
     <string name="main_tab_headline_tracked">Tracked</string>
     <string name="main_tab_headline_untracked">Untracked</string>
@@ -20,8 +18,4 @@
 
     <string name="source_header">Current source:</string>
 
-    <string-array name="cbrf_supported_languages_codes">
-        <item>en</item>
-        <item>ru</item>
-    </string-array>
 </resources>

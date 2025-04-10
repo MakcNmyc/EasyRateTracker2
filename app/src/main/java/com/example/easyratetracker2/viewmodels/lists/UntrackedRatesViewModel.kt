@@ -21,7 +21,7 @@ import javax.inject.Inject
 class UntrackedRatesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val networkObserver: NetworkObserver,
-    val sourceFactory: UntrackedSourceFactory
+    private val sourceFactory: UntrackedSourceFactory
 ) : ViewModel() {
 
     val model: StateFlow<UntrackedListModel?> = savedStateHandle.getStateFlow(MODEL_NAME, null)
