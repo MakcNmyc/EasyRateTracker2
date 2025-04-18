@@ -5,6 +5,7 @@ import androidx.collection.ArrayMap
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+// TODO: migrate to Concat adapter
 abstract class ServiceSourceExecutor{
 
     @ApplicationContext @Inject lateinit var context: Context

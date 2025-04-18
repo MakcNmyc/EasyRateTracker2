@@ -11,6 +11,7 @@ import dagger.hilt.android.EntryPointAccessors.fromApplication
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
+// TODO: migrate to Concat adapter
 class UntrackedSourceFactory @Inject constructor(private val networkObserver: NetworkObserver,
                                                  @ApplicationContext private var context: Context){
 

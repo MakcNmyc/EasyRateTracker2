@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.easyratetracker2.adapters.util.NetworkObserver.Status
 
+// TODO: migrate to Concat adapter
 class PositionRateSource<T: Any>(
     private val networkObserver: NetworkObserver,
     private val executor: PositionalSourceExecutor<T>,

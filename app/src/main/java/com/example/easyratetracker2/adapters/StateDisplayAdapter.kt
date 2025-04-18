@@ -26,6 +26,8 @@ abstract class StateDisplayAdapter<V : ListElementModel<*>, T : ViewDataBinding>
     loadProducer: ((parent: ViewGroup, observer: NetworkObserver) -> RecyclerView.ViewHolder)? = null
 ) : ModelAdapter<V>(itemCallback) {
 
+    // TODO: migrate to Concat adapter
+
     interface ViewHolderHandler<V : ListElementModel<*>, T : ViewDataBinding>{
         fun bindingInflater(a: LayoutInflater, b: ViewGroup, c: Boolean): T
         fun contentSetter(model: V, binding: T)
